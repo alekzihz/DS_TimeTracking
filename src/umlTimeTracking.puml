@@ -1,18 +1,23 @@
 @startuml
 'https://plantuml.com/class-diagram
-class main{
+class CLiente{
     -task: Task
     -project: Project
 }
 
-interface I{
+abstract Project{
 
-   +duracion()
-   +startTask();
-   +stopTask();
+    - tag: String
+    - task: <ArrayList>:Task
+    -project <ArrayList>: Project
+    -createProject(tag: String)
+    +duracion()
+    +startTask()
+    +stopTask()
+
+
 }
-
-class Project{
+class childrenProject{
 
     - tag: String
     - task: <ArrayList>:Task
@@ -25,7 +30,7 @@ class Project{
 
 }
 
-abstract Time {
+abstract Com {
    - dateInitial: LocalDateTime
    - dateFinal: LocalDateTime
    - duration: LocalDateTime
@@ -41,8 +46,7 @@ class Task {
 
 }
 
-Task->I
-Project->I
+
 Project"1" *-> "n"Task
 
 
