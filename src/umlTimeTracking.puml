@@ -1,53 +1,49 @@
 @startuml
 'https://plantuml.com/class-diagram
-class CLiente{
+
+
+
+class Client{
     -task: Task
     -project: Project
+
 }
-
-abstract Project{
-
-    - tag: String
+abstract Component{
+    {abstract}-initialDate: LocalDateTime
+    {abstract}-finalDate: LocalDateTime
+    {abstract}- tag: String
+    {abstract}- duration: LocalDateTime
     - task: <ArrayList>:Task
     -project <ArrayList>: Project
     -createProject(tag: String)
-    +duracion()
-    +startTask()
-    +stopTask()
-
+    -getProject()
+     #duracion():LocalDateTime
 
 }
-class childrenProject{
-
+class Project{
     - tag: String
     - task: <ArrayList>:Task
     -project <ArrayList>: Project
-    -createProject(tag: String)
-    +duracion()
+    #duracion():LocalDateTime
     +startTask()
     +stopTask()
-
-
 }
 
-abstract Com {
-   - dateInitial: LocalDateTime
-   - dateFinal: LocalDateTime
-   - duration: LocalDateTime
 
-}
+
 class Task {
    - tag: String
-   - duration: LocalDateTime
+   -interval:LocalDateTime[]
     -createTask(tag: String)
-    +duracion()
-    +startTask()
-    +stopTask()
+    #duration():LocalDateTime
+    -startTask()
+    -stopTask()
 
 }
-
-
-Project"1" *-> "n"Task
+Component  <|-- Task
+Component <|-- Project
+Project *-> Component:children
+Client --|> Component:component
 
 
 @enduml
