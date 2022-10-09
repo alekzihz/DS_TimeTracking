@@ -13,37 +13,65 @@ abstract Component{
     {abstract}-finalDate: LocalDateTime
     {abstract}- tag: String
     {abstract}- duration: LocalDateTime
-    - task: <ArrayList>:Task
-    -project <ArrayList>: Project
-    -createProject(tag: String)
-    -getProject()
+
+
+
      #duracion():LocalDateTime
 
 }
 class Project{
-    - tag: String
-    - task: <ArrayList>:Task
-    -project <ArrayList>: Project
-    #duracion():LocalDateTime
-    +startTask()
-    +stopTask()
+
+    -Project(tag: String)
+
 }
 
 
 
 class Task {
-   - tag: String
-   -interval:LocalDateTime[]
-    -createTask(tag: String)
-    #duration():LocalDateTime
+
+    -Task(tag: String)
     -startTask()
     -stopTask()
 
+
 }
-Component  <|-- Task
-Component <|-- Project
-Project *-> Component:children
+class interval{
+
+    -Duration:LocalDateTime
+
+}
+
+package java.util{
+    Abstract Observable
+    {
+       +addObserver(ob: Observer)
+       +deleteObserver(ob: Observer)
+       +notifyObserver(arg0: Observable, arg1:Object)
+    }
+
+    interface Observer {
+
+        +update(arg0: Observable, arg1: Object)
+
+}
+}
+
+class Time {
+    -time: Timer
+    -DateFinalTime:LocalDateTime
+    -DateInitialTime:LocalDateTime
+    
+
+
+}
+
 Client --|> Component:component
+Project *--> "*"Component:children
+
+Component <|--down(Project,Task)
+Observable<--Time
+Observer<..Task
+Observable*--left>"*"Observer:observers
 
 
 @enduml

@@ -6,4 +6,8 @@ public class Main {
     }
     //ArrayList<Task> task = new ArrayList<Task>();
 
+    Timer timer = new Timer("Timer");
+    System.out.println(timer);
+    long delay = 1000L;
+    timer.schedule(task, delay);
 }
