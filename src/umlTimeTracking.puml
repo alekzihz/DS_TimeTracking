@@ -11,33 +11,49 @@ class Client{
 abstract Component{
     {abstract}-initialDate: LocalDateTime
     {abstract}-finalDate: LocalDateTime
-    {abstract}- tag: String
+    {abstract}- tagName: String
     {abstract}- duration: LocalDateTime
 
 
-
-     #duracion():LocalDateTime
+     #createProject()
+     #createTask()
+     +toString()
 
 }
 class Project{
-
+    {abstract}-initialDate: LocalDateTime
+    {abstract}-finalDate: LocalDateTime
+    {abstract}- tagName: String
+    {abstract}- duration: LocalDateTime
+    #createProject()
+    -calculateDuration():void
     -Project(tag: String)
+    +toString()
+
 
 }
 
 
 
 class Task {
-
+    -tagName: String
+    -intervalList:List <interval>
+    #createTask()
     -Task(tag: String)
     -startTask()
     -stopTask()
+    +toString()
+
 
 
 }
 class interval{
-
+    -finalDate:LocalDateTime
+    -initialDate:LocalDateTime
     -Duration:LocalDateTime
+    +getFinalDate()
+    +getInitialDate()
+    +getDuration()
 
 }
 
@@ -58,11 +74,8 @@ package java.util{
 
 class Time {
     -time: Timer
-    -DateFinalTime:LocalDateTime
-    -DateInitialTime:LocalDateTime
-    
-
-
+    -dateTime: LocalDateTime
+    +startTimer()
 }
 
 Client --|> Component:component
@@ -70,8 +83,9 @@ Project *--> "*"Component:children
 
 Component <|--down(Project,Task)
 Observable<--Time
-Observer<..Task
+Observer<..interval
 Observable*--left>"*"Observer:observers
+Task "1..n"--> interval:interval
 
 
 @enduml
