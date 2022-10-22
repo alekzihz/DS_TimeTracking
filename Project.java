@@ -21,12 +21,22 @@ public class Project extends Component{
     }
 
     @Override
-    void updateDuration(Duration newDuration) {
+    void updateDuration(Duration newDuration, Time newTimer) {
         setDuration(newDuration);
         if(this.tagName!="root"){
             parentProject.setDuration(newDuration);
-
         }
+        /*if(this.duration.getSeconds()==0){
+            this.setDuration(newDuration);
+        }else{
+            this.duration=this.duration.plusSeconds(newTimer.getSeconds());
+            //this.parentProject.setDuration(duration);
+            this.setDuration(duration);
+        }
+        if(this.parentProject!=null){
+            this.parentProject.duration=this.parentProject.duration.plusSeconds(newTimer.getSeconds());
+            this.parentProject.setDuration(this.parentProject.duration);
+        }*/
     }
 
     @Override
