@@ -5,7 +5,7 @@ abstract class Component {
     protected LocalDateTime initialDate;
     protected LocalDateTime dateFinal;
     protected String tagName;
-    protected Duration duration;
+    protected Duration duration=Duration.ofSeconds(0);
     protected Project parentProject;
 
     protected String tagParentProject;
@@ -61,7 +61,7 @@ abstract class Component {
     public void setTagParentProject(String tagParentProject){this.tagParentProject=tagParentProject;}
 
     abstract void updateFinalDate(LocalDateTime newFinalDate);
-    abstract void updateDuration(Duration newDuration);
+    abstract void updateDuration(Duration newDuration, Time newTimer);
     protected  abstract void acceptVisitor(Visitor v);
 
 
