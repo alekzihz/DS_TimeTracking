@@ -19,8 +19,8 @@ public class Printer implements Visitor, Observer {
     @Override
     public void visitProject(Project project) {
 
-        String formatString = String.format("Project %4s       child of %4s %40s %40s %20s", project.getTagName(),project.getParentTagName(),project.getInitialDate(),project.getDateFinal(),
-                project.getDuration());
+        String formatString = String.format("Project: %20s %40s %40s %20s", project.getTagName(),project.getInitialDate(),project.getDateFinal(),
+                project.getDuration().toSeconds());
         System.out.println(formatString);
 
 
@@ -31,8 +31,8 @@ public class Printer implements Visitor, Observer {
     }
     @Override
     public void visitTask(Task task) {
-        String formatString = String.format("Task %7s       child of %4s %40s %40s %20s", task.getTagName(),task.getParentTagName(),task.getInitialDate(),task.getDateFinal(),
-                task.getDuration());
+        String formatString = String.format("Task:    %20s %40s %40s %20s", task.getTagName(),task.getInitialDate(),task.getDateFinal(),
+                task.getDuration().toSeconds());
         System.out.println(formatString);
 
 
@@ -46,7 +46,7 @@ public class Printer implements Visitor, Observer {
     @Override
     public void visitInterval(Interval interval) {
 
-        String formatString = String.format("Interval %3s       child of %4s %40s %40s %20s", interval.getTask().getTagName(),interval.getTask().getParentTagName(),interval.getInitialDate(),interval.getFinalDate(),
+        String formatString = String.format("Interval:%20s       child of %4s %40s %40s %20s", interval.getTask().getTagName(),interval.getTask().getParentTagName(),interval.getInitialDate(),interval.getFinalDate(),
                 interval.getDuration().toSeconds());
         System.out.println(formatString);
 
