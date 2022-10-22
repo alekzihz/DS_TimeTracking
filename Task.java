@@ -17,10 +17,9 @@ public class Task extends Component{
     }
 
     @Override
-    void updateDuration(Duration newDuration) {
+    void updateDuration(Duration newDuration, Time newTimer) {
         setDuration(newDuration);
         parentProject.setDuration(newDuration);
-
     }
 
     @Override
@@ -46,13 +45,16 @@ public class Task extends Component{
     public void startTask( Time newTime){
         if(this.initialDate==null){
            setInitialDate(LocalDateTime.now());
-
+           this.parentProject.setInitialDate(LocalDateTime.now());
         }
         addInterval(newTime);
+        //System.out.println(this.tagName+"Starts");
 
     }
     public void stopTask(){
-
+        //System.out.println(this.tagName+" Stops");
+        Interval stop=intervalList.get(intervalList.size()-1);
+        stop.stopInterval();
     }
 
 }
