@@ -13,7 +13,7 @@ public class Interval implements Observer {
 
     public Interval(Time newTimer, Task task) {
         setTask(task);
-        setFinalDate(LocalDateTime.now());
+        setInitalDate(LocalDateTime.now());
         setDuration(Duration.ofSeconds(0));
         newTimer.addObserver(this);
         setTimer(newTimer);
@@ -69,8 +69,12 @@ public class Interval implements Observer {
         setDuration(duration.plusSeconds(timer.getSeconds()));
 
         this.task.updateFinalDate(finalDate);
-        this.task.updateDuration(duration);
+        this.task.updateDuration(duration,timer);
 
 
+    }
+
+    public void stopInterval() {
+        timer.deleteObserver(this);
     }
 }
