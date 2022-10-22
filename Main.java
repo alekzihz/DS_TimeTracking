@@ -34,22 +34,31 @@ public class Main {
         clock.addObserver(printer);
 
         transportation.startTask(clock);
+        System.out.println("Transportation Starts");
         sleep(4000);
         transportation.stopTask();
         sleep(2000);
+        System.out.println("Transportation Stops");
         firstList.startTask(clock);
+        System.out.println("First list Starts");
         sleep(6000);
         secondList.startTask(clock);
+        System.out.println("Second list Starts");
         sleep(4000);
         firstList.stopTask();
+        System.out.println("First list Stops");
         sleep(2000);
         secondList.stopTask();
+        System.out.println("Second list Stops");
         sleep(2000);
         transportation.startTask(clock);
+        System.out.println("Transportation Starts");
         sleep(4000);
         transportation.stopTask();
+        System.out.println("Transportation Stops");
     }
     //ArrayList<Task> task = new ArrayList<Task>();
+    //todo: corregir actualizacion duracion
 
 
 
