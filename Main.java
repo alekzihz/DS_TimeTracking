@@ -1,10 +1,10 @@
-import java.util.ArrayList;
-import java.util.Timer;
-
+import static java.lang.System.exit;
 import static java.lang.Thread.sleep;
 
 public class Main {
+
     public static void main(String[] args) throws InterruptedException {
+
         Project root = new Project("root");
         Project softwareDesign= new Project("software design",root);
         Project softwareTesting = new Project("sotware testing",root);
@@ -30,12 +30,12 @@ public class Main {
 
 
         Time clock = new Time(2);
-        Printer printer = new Printer(root);
-        clock.addObserver(printer);
+        //Printer printer = new Printer(root);
+        //clock.addObserver(printer);
 
         transportation.startTask(clock);
         System.out.println("Transportation Starts");
-        sleep(4000);
+        sleep(6000);
         transportation.stopTask();
         sleep(2000);
         System.out.println("Transportation Stops");
@@ -56,6 +56,8 @@ public class Main {
         sleep(4000);
         transportation.stopTask();
         System.out.println("Transportation Stops");
+
+        exit(0);
     }
     //ArrayList<Task> task = new ArrayList<Task>();
     //todo: corregir actualizacion duracion
