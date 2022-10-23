@@ -8,33 +8,33 @@ public class Task extends Component{
 
     public Task(String tagName, Project parentProject){
         super(tagName,parentProject);
+
     }
 
     @Override
     void updateFinalDate(LocalDateTime newFinalDate) {
         setDateFinal(newFinalDate);
-        parentProject.setDateFinal(newFinalDate);
+        parentProject.updateFinalDate(newFinalDate);
     }
 
     @Override
     void updateDuration(Duration newDuration, Time newTimer) {
-        setDuration(newDuration);
-        parentProject.setDuration(newDuration);
-    }
+        if(this.duration.getSeconds()!=0){
+            setDuration(this.duration.plusSeconds(newTimer.getSeconds()));
+        }else{
+            setDuration(newDuration);}
 
+        Printer pi = new Printer(this.getParentProject());
+        pi.visitTask(this);
+        parentProject.updateDuration(duration,newTimer);
+        }
     @Override
     protected void acceptVisitor(Visitor v) {
         v.visitTask(this);
-        for(Interval i: intervalList){
-            i.acceptVisitor(v);
-        }
-
     }
-
     public List<Interval> getIntervalList() {
         return intervalList;
     }
-
     public void setIntervalList(List<Interval> intervalList) {
         this.intervalList = intervalList;
     }
@@ -45,7 +45,7 @@ public class Task extends Component{
     public void startTask( Time newTime){
         if(this.initialDate==null){
            setInitialDate(LocalDateTime.now());
-           this.parentProject.setInitialDate(LocalDateTime.now());
+           this.parentProject.updateInitialDate(LocalDateTime.now());
         }
         addInterval(newTime);
         //System.out.println(this.tagName+"Starts");
