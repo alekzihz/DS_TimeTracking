@@ -34,7 +34,6 @@ public class Project extends Component{
     void updateDuration(Duration newDuration, Time newTimer) {
 
         Printer pi = new Printer(this);
-
         //si duracion es 0 set newduration
         if(this.duration.getSeconds()==0){
             this.setDuration(newDuration);
@@ -43,24 +42,14 @@ public class Project extends Component{
         //mientras sea diferente de 0 sumar la duracion anterior con el ciclo del reloj(2).
         else{
                 this.duration=this.duration.plusSeconds(newTimer.getSeconds());
-                this.setDuration(this.duration);
+                //this.setDuration(this.duration);
                 pi.visitProject(this);
         }
 
         //mientras el proyecto tenga un padre actualizar las duracions.
-
         if(this.parentProject!=null) {
-            //si el proyectoPadre es root y la duracion del proyecto actual sea 0 la duracion del proyecto root + newDuration
-            if((this.getParentProject().getTagName()).equals("root") && this.duration.getSeconds()==0){
-                this.parentProject.duration=this.parentProject.duration.plusSeconds(newDuration.getSeconds());
-                this.setDuration(this.parentProject.duration);
-            }else{
-
                 this.parentProject.updateDuration(this.duration, newTimer);
-
             }
-
-        }
     }
 
     @Override
