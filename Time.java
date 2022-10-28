@@ -1,16 +1,25 @@
-import java.time.LocalDateTime;
 import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Time extends Observable {
     private int seconds;
-    private Timer timer;
-    public Time(int second) {
-        setSeconds(second);
+    private static Time intanceTime;
+    private static Timer timer;
+
+    private Time(int seconds) {
+        setSeconds(seconds);
         setTimer(new Timer());
-        timer.scheduleAtFixedRate(new NotifyTask(),0,seconds*1000);
+        timer.scheduleAtFixedRate(new NotifyTask(),0, this.seconds *1000);
+       }
+
+    public static synchronized Time getIntanceTime(int seconds){
+        if(intanceTime ==null){
+            intanceTime =new Time(seconds);
+        }
+        return intanceTime;
     }
+
 
     public int getSeconds() {
         return seconds;
@@ -25,11 +34,13 @@ public class Time extends Observable {
     }
     public class NotifyTask extends TimerTask{
 
+
+
         @Override
         public void run() {
             //System.out.println(LocalDateTime.now());
-            setChanged();
-            notifyObservers(this);
+            intanceTime.setChanged();
+            intanceTime.notifyObservers(this);
         }
     }
 }

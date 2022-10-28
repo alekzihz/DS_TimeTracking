@@ -29,20 +29,20 @@ public class Main {
         timeTracker.addComponent(firstMilestone);
 
 
-        Time clock = new Time(2);
+        Time clock = Time.getIntanceTime(2);
         //Printer printer = new Printer(root);
         //clock.addObserver(printer);
 
-        transportation.startTask(clock);
+        transportation.startTask();
         System.out.println("Transportation Starts");
         sleep(6000);
         transportation.stopTask();
         sleep(2000);
         System.out.println("Transportation Stops");
-        firstList.startTask(clock);
+        firstList.startTask();
         System.out.println("First list Starts");
         sleep(6000);
-        secondList.startTask(clock);
+        secondList.startTask();
         System.out.println("Second list Starts");
         sleep(4000);
         firstList.stopTask();
@@ -51,11 +51,15 @@ public class Main {
         secondList.stopTask();
         System.out.println("Second list Stops");
         sleep(2000);
-        transportation.startTask(clock);
+        transportation.startTask();
         System.out.println("Transportation Starts");
         sleep(4000);
         transportation.stopTask();
         System.out.println("Transportation Stops");
+
+        Printer printer = new Printer(root);
+        clock.addObserver(printer);
+
 
         exit(0);
     }

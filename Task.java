@@ -42,7 +42,8 @@ public class Task extends Component{
         Interval startInterval= new Interval(newTime, this);
         intervalList.add(startInterval);
     }
-    public void startTask( Time newTime){
+    public void startTask(){
+        Time newTime = Time.getIntanceTime(2);
         if(this.initialDate==null){
            setInitialDate(LocalDateTime.now());
            this.parentProject.updateInitialDate(LocalDateTime.now());
