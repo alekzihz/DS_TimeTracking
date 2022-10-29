@@ -12,7 +12,8 @@ public class Interval implements Observer {
     private Time timer;
 
 
-    public Interval(Time newTimer, Task task) {
+    public Interval(Task task) {
+        Time newTimer = Time.getIntanceTime(2);
         setTask(task);
         setInitalDate(LocalDateTime.now());
         setFinalDate(LocalDateTime.now());
