@@ -38,17 +38,17 @@ public class Task extends Component{
     public void setIntervalList(List<Interval> intervalList) {
         this.intervalList = intervalList;
     }
-    public void addInterval(Time newTime){
-        Interval startInterval= new Interval(newTime, this);
+    public void addInterval(){
+        Interval startInterval= new Interval(this);
         intervalList.add(startInterval);
     }
     public void startTask(){
-        Time newTime = Time.getIntanceTime(2);
+
         if(this.initialDate==null){
            setInitialDate(LocalDateTime.now());
            this.parentProject.updateInitialDate(LocalDateTime.now());
         }
-        addInterval(newTime);
+        addInterval();
         //System.out.println(this.tagName+"Starts");
 
     }
