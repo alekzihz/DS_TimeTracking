@@ -61,7 +61,7 @@ abstract class Component {
     public void setTagParentProject(String tagParentProject){this.tagParentProject=tagParentProject;}
 
     abstract void updateFinalDate(LocalDateTime newFinalDate);
-    abstract void updateDuration(Duration newDuration, Time newTimer);
+    abstract void updateDuration(Duration newDuration, Clock newTimer);
     protected  abstract void acceptVisitor(Visitor v);
 
 
