@@ -1,17 +1,26 @@
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+
 import static java.lang.System.exit;
+import static java.lang.System.setOut;
 import static java.lang.Thread.sleep;
 
 public class Main {
-
+    public static Project root = new Project("root");
     public static void main(String[] args) throws InterruptedException {
 
         //apendiceA();
         apendiceB();
-
-
+        crearJSON();
+        exit(0);
     }
     public static void apendiceA(){
-        Project root = new Project("root");
         Project softwareDesign= new Project("software design",root);
         Project softwareTesting = new Project("sotware testing",root);
         Project dataBase = new Project("database", root);
@@ -38,7 +47,6 @@ public class Main {
 
     }
     public static void apendiceB() throws InterruptedException {
-        Project root = new Project("root");
         Project softwareDesign= new Project("software design",root);
         Project softwareTesting = new Project("sotware testing",root);
         Project dataBase = new Project("database", root);
@@ -88,16 +96,43 @@ public class Main {
         transportation.stopTask();
         System.out.println("Transportation Stops");
 
-        Printer printer = new Printer(root);
-        clock.addObserver(printer);
-
-
-        exit(0);
+        //Printer printer = new Printer(root);
+        //clock.addObserver(printer);
+        //exit(0);
     }
     //ArrayList<Task> task = new ArrayList<Task>();
     //todo: corregir actualizacion duracion
 
+    public static void crearJSON(){
+        JSONObject obj= new JSONObject();
+        obj.put("root", writeTreeToJSON(root));
+        try {
+            FileWriter file = new FileWriter("file.json");
+            file.write(obj.toString());
+            file.flush();
+            file.close();
 
+        } catch (IOException e) {System.out.println(e.toString());}
+        System.out.println("fichero creado");
+
+    }
+
+    public static JSONObject writeTreeToJSON(Project root){
+        //Map<Component> map = new HashMap<>();
+        JSONArray list = new JSONArray();
+        DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        JSONObject jo = new JSONObject();
+        jo.put("Name",root.getTagName());
+        jo.put("Class", root.getClass());
+        jo.put("InitialDate", root.getInitialDate().format(DATEFORMATTER));
+        jo.put("FinalDate", root.getDateFinal().format(DATEFORMATTER));
+        jo.put("Duration", root.getDuration().toSeconds());
+
+        if(root.getChildrenProject()!=null){
+
+        }
+        return jo;
+    }
 
 
 
