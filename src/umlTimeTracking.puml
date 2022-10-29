@@ -5,8 +5,8 @@
 
 class main{
   main(String[] args):void
-
-  --
+  apendiceA(): void
+  apendiceB(): void
 
 }
 abstract Component{
@@ -30,27 +30,28 @@ Interface Visitor{
 
 class Project{
     -childrenProject:List <component>: arrayList
-
+    +updateInitialDate(newFinalDate: LocalDateTime): void
      {abstract}-updateFinalDate(newFinalDate: LocalDateTime): void
-     {abstract}-updateDuration(newDuration: Duration, newTimer: Time): void
+     {abstract}-updateDuration(newDuration: Duration, newTimer: Clock): void
      {abstract}-acceptVisitor(v: Visitor): void
+     #addComponent(component: Component):void
 }
 
 class Task {
     -intervalList:List <interval>
     {abstract}-updateFinalDate(newFinalDate: LocalDateTime): void
-    {abstract}-updateDuration(newDuration: Duration, newTimer: Time): void
+    {abstract}-updateDuration(newDuration: Duration, newTimer: Clock): void
     {abstract}-acceptVisitor(v: Visitor): void
-    +startTask(newTime: Time): void
+    +startTask(): void
     +stopTask(): void
-    +addInterval(newTime: Time): void
+    +addInterval(): void
 }
 class interval{
     -task: Task
     -finalDate:LocalDateTime
     -initialDate:LocalDateTime
     -Duration:Double
-    -timer: Time
+    -clock: Clock
 
     {abstract}-acceptVisitor(v: Visitor): void
     {abstract}-update(ob: Observable, arg: Object): void
@@ -77,9 +78,12 @@ package java.util{
 
 }
 
-class Time {
+class Clock {
+    -instanceTime: Clock
     -seconds: int
     -timer: Timer
+    -clock(seconds: int)
+    +getInstanceClock(seconds: int):static synchronized :Clock
 
 }
 
@@ -95,7 +99,7 @@ class Printer{
     +{abstract}update(arg0: Observable, arg1: Object)
 }
 
-Time-left->NotifyTask
+Clock-left->NotifyTask
 NotifyTask--|>Observable
 NotifyTask-left-|>TimerTask
 
@@ -107,7 +111,7 @@ Project *--> "*"Component:children
 
 Component <|--down(Project,Task)
 
-Time--|> Observable
+Clock--|> Observable
 interval ..|> Observer
 Observable*--left>"*"Observer:observers
 Task "1..n"--> interval:interval
