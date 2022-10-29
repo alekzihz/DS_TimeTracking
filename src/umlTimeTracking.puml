@@ -3,87 +3,112 @@
 
 
 
-class Client{
-    -task: Task
-    -project: Project
+class main{
+  main(String[] args):void
+
+  --
 
 }
 abstract Component{
-    {abstract}-initialDate: LocalDateTime
-    {abstract}-finalDate: LocalDateTime
-    {abstract}- tagName: String
-    {abstract}- duration: LocalDateTime
+    {abstract}#initialDate: LocalDateTime
+    {abstract}#finalDate: LocalDateTime
+    {abstract}#tagName: String
+    {abstract}#duration: LocalDateTime
+    {abstract}#parentProject: Project
 
+    {abstract}-updateFinalDate(newFinalDate: LocalDateTime): void
+    {abstract}-updateDuration(newDuration: Duration, newTimer: Time): void
+    {abstract}-acceptVisitor(v: Visitor): void
+}
 
-     #createProject()
-     #createTask()
-     +toString()
+Interface Visitor{
+    +visitTask(task: Task): void
+    +visitProject(project: Project): void
+    +visitInterval( interval: Interval): void
 
 }
+
 class Project{
-    {abstract}-initialDate: LocalDateTime
-    {abstract}-finalDate: LocalDateTime
-    {abstract}- tagName: String
-    {abstract}- duration: LocalDateTime
-    #createProject()
-    -calculateDuration():void
-    -Project(tag: String)
-    +toString()
+    -childrenProject:List <component>: arrayList
 
-
+     {abstract}-updateFinalDate(newFinalDate: LocalDateTime): void
+     {abstract}-updateDuration(newDuration: Duration, newTimer: Time): void
+     {abstract}-acceptVisitor(v: Visitor): void
 }
-
-
 
 class Task {
-    -tagName: String
     -intervalList:List <interval>
-    #createTask()
-    -Task(tag: String)
-    -startTask()
-    -stopTask()
-    +toString()
-
-
-
+    {abstract}-updateFinalDate(newFinalDate: LocalDateTime): void
+    {abstract}-updateDuration(newDuration: Duration, newTimer: Time): void
+    {abstract}-acceptVisitor(v: Visitor): void
+    +startTask(newTime: Time): void
+    +stopTask(): void
+    +addInterval(newTime: Time): void
 }
 class interval{
+    -task: Task
     -finalDate:LocalDateTime
     -initialDate:LocalDateTime
-    -Duration:LocalDateTime
-    +getFinalDate()
-    +getInitialDate()
-    +getDuration()
+    -Duration:Double
+    -timer: Time
+
+    {abstract}-acceptVisitor(v: Visitor): void
+    {abstract}-update(ob: Observable, arg: Object): void
+    +stopInterval(): void
 
 }
 
 package java.util{
-    Abstract Observable
-    {
-       +addObserver(ob: Observer)
-       +deleteObserver(ob: Observer)
-       +notifyObserver(arg0: Observable, arg1:Object)
-    }
 
     interface Observer {
 
-        +update(arg0: Observable, arg1: Object)
+        +{abstract}update(arg0: Observable, arg1: Object)
 
-}
+    }
+
+    Abstract Observable
+    {
+       +{abstract}addObserver(ob: Observer)
+       +{abstract}deleteObserver(ob: Observer)
+       +{abstract}notifyObserver(arg0: Observable, arg1:Object)
+    }
+
+
+
 }
 
 class Time {
-    -time: Timer
-    -dateTime: LocalDateTime
-    +startTimer()
+    -seconds: int
+    -timer: Timer
+
 }
 
-Client --|> Component:component
+class NotifyTask{
+    {abstract}run():void
+}
+
+class Printer{
+    +visitTask(task: Task): void
+    +visitProject(project: Project): void
+    +visitInterval( interval: Interval): void
+
+    +{abstract}update(arg0: Observable, arg1: Object)
+}
+
+Time-left->NotifyTask
+NotifyTask--|>Observable
+NotifyTask-left-|>TimerTask
+
+Printer..|>Visitor
+Printer-->Observer
+
+main"1..n"--> Component
 Project *--> "*"Component:children
 
 Component <|--down(Project,Task)
-Observable<--Time
-Observer<..interval
+
+Time--|> Observable
+interval ..|> Observer
 Observable*--left>"*"Observer:observers
 Task "1..n"--> interval:interval
 
