@@ -1,21 +1,20 @@
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Observable;
 import java.util.Observer;
 
 public class Interval implements Observer {
     private Task task;
     private LocalDateTime finalDate;
-    private LocalDateTime initalDate;
+    private LocalDateTime initialDate;
     private Duration duration;
-    private Time timer;
+    private Clock timer;
 
 
     public Interval(Task task) {
-        Time newTimer = Time.getIntanceTime(2);
+        Clock newTimer = Clock.getInstanceClock(2);
         setTask(task);
-        setInitalDate(LocalDateTime.now());
+        setInitialDate(LocalDateTime.now());
         setFinalDate(LocalDateTime.now());
         setDuration(Duration.ofSeconds(0));
         newTimer.addObserver(this);
@@ -31,15 +30,11 @@ public class Interval implements Observer {
     }
 
     public LocalDateTime getInitialDate() {
-        return initalDate;
+        return initialDate;
     }
 
     public Duration getDuration() {
         return duration;
-    }
-
-    public Time getTimer() {
-        return timer;
     }
 
     public void setTask(Task task) {
@@ -50,15 +45,15 @@ public class Interval implements Observer {
         this.finalDate = finalDate;
     }
 
-    public void setInitalDate(LocalDateTime initalDate) {
-        this.initalDate = initalDate;
+    public void setInitialDate(LocalDateTime initialDate) {
+        this.initialDate = initialDate;
     }
 
     public void setDuration(Duration duration) {
         this.duration = duration;
     }
 
-    public void setTimer(Time timer) {
+    public void setTimer(Clock timer) {
         this.timer = timer;
     }
 

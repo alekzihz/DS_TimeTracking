@@ -60,7 +60,7 @@ public class Main {
         Problems.addComponent(secondList);
         timeTracker.addComponent(readHandout);
         timeTracker.addComponent(firstMilestone);
-        Time clock = Time.getIntanceTime(2);
+        Clock clock = Clock.getInstanceClock(2);
         //Printer printer = new Printer(root);
         //clock.addObserver(printer);
 

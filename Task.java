@@ -18,7 +18,7 @@ public class Task extends Component{
     }
 
     @Override
-    void updateDuration(Duration newDuration, Time newTimer) {
+    void updateDuration(Duration newDuration, Clock newTimer) {
         if(this.duration.getSeconds()!=0){
             setDuration(this.duration.plusSeconds(newTimer.getSeconds()));
         }else{

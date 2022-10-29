@@ -20,7 +20,7 @@ public class Project extends Component{
         }
     }
 
-    void updateInitialDate(LocalDateTime InitialDate){
+    public void updateInitialDate(LocalDateTime InitialDate){
         if(this.initialDate==null){
             setInitialDate(InitialDate);
         }
@@ -31,7 +31,7 @@ public class Project extends Component{
     }
 
     @Override
-    void updateDuration(Duration newDuration, Time newTimer) {
+    void updateDuration(Duration newDuration, Clock newTimer) {
 
         Printer pi = new Printer(this);
         //si duracion es 0 set newduration
