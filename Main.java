@@ -4,11 +4,9 @@ import org.json.JSONObject;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
+
 
 import static java.lang.System.exit;
-import static java.lang.System.setOut;
 import static java.lang.Thread.sleep;
 
 public class Main {
@@ -68,6 +66,7 @@ public class Main {
         Problems.addComponent(secondList);
         timeTracker.addComponent(readHandout);
         timeTracker.addComponent(firstMilestone);
+
         Clock clock = Clock.getInstanceClock(2);
         //Printer printer = new Printer(root);
         //clock.addObserver(printer);
@@ -130,8 +129,62 @@ public class Main {
 
         if(root.getChildrenProject()!=null){
 
+            //System.out.println("mis hijos son "+root.getChildrenProject().size());
+            for (Component i: root.getChildrenProject()){
+                //System.out.println(i.getTagName());
+                list.put(writeChildrenRoot(i));
+
+            }
+            jo.put("children",list);
         }
         return jo;
+    }
+
+    public static JSONObject writeChildrenRoot(Component childrenComponent){
+        DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        JSONObject itemChildren = new JSONObject();
+        JSONArray listInterval = new JSONArray();
+        JSONArray listComponent = new JSONArray();
+        JSONObject itemsComponent = new JSONObject();
+
+        itemChildren.put("Name",childrenComponent.getTagName());
+        itemChildren.put("Class", childrenComponent.getClass());
+        itemChildren.put("InitialDate", (childrenComponent.getInitialDate()==null) ? "null" : childrenComponent.getInitialDate().format(DATEFORMATTER));
+        itemChildren.put("FinalDate", (childrenComponent.getDateFinal()==null) ? "null" : childrenComponent.getDateFinal().format(DATEFORMATTER));
+        itemChildren.put("Duration", childrenComponent.getDuration().toSeconds());
+
+        if(childrenComponent instanceof Task){
+            for (Interval i: ((Task) childrenComponent).getIntervalList()){
+                listInterval.put(writeIntervalsTask(i));
+            }
+            itemChildren.put("Intervals",listInterval);
+        } else{
+            if(((Project)childrenComponent).getChildrenProject()!=null){
+                for (Component i: ((Project)childrenComponent).getChildrenProject()){
+                    //System.out.println("hijos de hijos "+i.getTagName());
+                    itemsComponent= writeChildrenRoot(i);
+                    listComponent.put(itemsComponent);
+                }
+                itemChildren.put("children", listComponent);
+            }
+        }
+        //((Project)childrenComponent).getChildrenProject();
+
+        //listChildren.put(itemChildren);
+
+        return itemChildren;
+
+    }
+
+    private static JSONObject writeIntervalsTask(Interval i) {
+        DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        JSONObject itemIntervals = new JSONObject();
+        itemIntervals.put("Initial Date", i.getInitialDate().format(DATEFORMATTER));
+        itemIntervals.put("Final Date", i.getFinalDate().format(DATEFORMATTER));
+        itemIntervals.put("Duration", i.getDuration().toSeconds());
+        itemIntervals.put("Task", i.getTask().tagName);
+        return  itemIntervals;
+
     }
 
 
