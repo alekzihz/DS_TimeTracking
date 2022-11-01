@@ -10,6 +10,9 @@ public class Task extends Component{
         super(tagName,parentProject);
 
     }
+    public Task (String tagName){
+        super(tagName);
+    }
 
     @Override
     void updateFinalDate(LocalDateTime newFinalDate) {
