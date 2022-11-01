@@ -8,7 +8,7 @@ abstract class Component {
     protected Duration duration=Duration.ofSeconds(0);
     protected Project parentProject;
 
-    protected String tagParentProject;
+    //protected String tagParentProject;
 
 
     public Component(String tagName){
@@ -58,15 +58,15 @@ abstract class Component {
     public void setParentProject(Project parentProject) {
         this.parentProject = parentProject;
     }
-    public void setTagParentProject(String tagParentProject){this.tagParentProject=tagParentProject;}
+    //public void setTagParentProject(String tagParentProject){this.tagParentProject=tagParentProject;}
 
     abstract void updateFinalDate(LocalDateTime newFinalDate);
     abstract void updateDuration(Duration newDuration, Clock newTimer);
     protected  abstract void acceptVisitor(Visitor v);
 
 
-    public String getParentTagName() {
+   // public String getParentTagName() {
 
-        return tagParentProject;
-    }
+       // return tagParentProject;
+    //}
 }
