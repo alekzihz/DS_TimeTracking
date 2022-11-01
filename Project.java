@@ -68,7 +68,7 @@ public class Project extends Component{
     protected void addComponent(Component component){
         childrenProject.add(component);
         component.setParentProject(this);
-        component.setTagParentProject(this.tagName);
+       //component.setTagParentProject(this.tagName);
 
     }
 
