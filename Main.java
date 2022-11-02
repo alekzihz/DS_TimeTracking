@@ -19,10 +19,11 @@ import static java.lang.Thread.sleep;
 
 public class Main {
     public static Project root = null;
+    public static Project rootA = null;
     public static void main(String[] args) throws InterruptedException, FileNotFoundException {
 
         //apendiceA();
-        //apendiceB();
+        apendiceB();
         //crearJSON();
 
 
@@ -30,11 +31,11 @@ public class Main {
         exit(0);
     }
     public static void apendiceA(){
-        root = new Project("root");
-        Project softwareDesign= new Project("software design",root);
-        Project softwareTesting = new Project("sotware testing",root);
-        Project dataBase = new Project("database", root);
-        Task transportation = new Task("transpotation", root);
+        rootA = new Project("root");
+        Project softwareDesign= new Project("software design",rootA);
+        Project softwareTesting = new Project("sotware testing",rootA);
+        Project dataBase = new Project("database", rootA);
+        Task transportation = new Task("transpotation", rootA);
         Project Problems = new Project("problems", softwareDesign);
         Project timeTracker = new Project("time tracker", softwareDesign);
         Task firstList = new Task("first list", Problems);
@@ -42,10 +43,10 @@ public class Main {
         Task readHandout = new Task("read handout", timeTracker);
         Task firstMilestone = new Task("first milestone", timeTracker);
 
-        root.addComponent(softwareDesign);
-        root.addComponent(softwareTesting);
-        root.addComponent(dataBase);
-        root.addComponent(transportation);
+        rootA.addComponent(softwareDesign);
+        rootA.addComponent(softwareTesting);
+        rootA.addComponent(dataBase);
+        rootA.addComponent(transportation);
         softwareDesign.addComponent(Problems);
         softwareDesign.addComponent(timeTracker);
         Problems.addComponent(firstList);
@@ -115,12 +116,17 @@ public class Main {
     }
     //ArrayList<Task> task = new ArrayList<Task>();
     //todo: corregir actualizacion duracion
+    //todo: agregar comentarios a las demas clases.
 
+
+    /**
+     * Test for reading a JSON file and loading into Root Project.
+     *
+     */
     public static void readJson() throws FileNotFoundException {
         String resourceName = "file.json";
 
-
-
+        System.out.println("Reading Json.....");
         InputStream is = Main.class.getResourceAsStream(resourceName);
         if (is == null) {
             throw new NullPointerException("Cannot find resource file " + resourceName);
@@ -130,24 +136,34 @@ public class Main {
         JSONObject object = new JSONObject(tokener);
         creatingRootfromJson(object);
 
+        System.out.println("Project created");
+
         //root.setDuration(Duration.ofSeconds(2));
 
 
     }
 
+
+    /**
+     * read file json and load in Project root
+     * @param object tree_project saved in file json.
+     */
+
     private static void creatingRootfromJson(JSONObject object) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        root = new Project("root");
+        //System.out.println(object.getJSONObject("root"));
+        root = new Project(object.getJSONObject("root").getString("Name"));
         root.setDuration(Duration.ofSeconds(object.getJSONObject("root").getInt("Duration")));
         root.setInitialDate(LocalDateTime.parse(object.getJSONObject("root").getString("InitialDate"), formatter));
         root.setDateFinal((LocalDateTime.parse(object.getJSONObject("root").getString("FinalDate"), formatter)));
         //root.setTagName(object.getJSONObject("root").getString("Name"));
 
-
         JSONArray children = object.getJSONObject("root").getJSONArray("children");
         List<Component> listChildren = new ArrayList<>();
 
+
+        //loop throught children root.
         for (int i = 0; i < children.length(); i++) {
             JSONObject obj = children.getJSONObject(i);
             Component comp = null;
@@ -156,24 +172,16 @@ public class Main {
             root.addComponent(comp);
         }
 
+        //set children on project root.
         root.setChildrenProject(listChildren);
     }
 
-    /*
-
-        root = new Project("root");
-        Project softwareDesign= new Project("software design",root);
-        Project softwareTesting = new Project("sotware testing",root);
-        Project dataBase = new Project("database", root);
-        Task transportation = new Task("transpotation",root);
-
-        root.addComponent(softwareDesign);
-        root.addComponent(softwareTesting);
-        root.addComponent(dataBase);
-        root.addComponent(transportation);
-*/
-
-
+    /**
+     * Recursive function that will iterate over the JSON object and instantiate and cast all the Projects/Tasks accordingly
+     *
+     * @param o JSON object of children root.
+     * @param comp used to added children-children project/task.
+     */
 
 
     private static Component feedChildren(JSONObject o, Component comp) {
@@ -183,9 +191,8 @@ public class Main {
             JSONArray intervals = o.getJSONArray("Intervals");
 
             comp= new Task(o.getString("Name"));
-            System.out.println(comp.getTagName());
 
-            if(o.getJSONArray("Intervals")!=null){
+            if(o.getJSONArray("Intervals").length()!=0){
 
                 ((Task) comp).setIntervalList(feedInterval(intervals, ((Task) comp)));
 
@@ -194,61 +201,63 @@ public class Main {
         else{
             comp =new Project(o.getString("Name"));
             JSONArray children = o.getJSONArray("children");
-            System.out.println("tengo hijos"+ children.length());
+
             for (int i = 0; i < children.length(); i++) {
                 Component auxComponent=null;
                 ((Project) comp).addComponent(feedChildren(children.getJSONObject(i),auxComponent));
                 //(feedChildren());
             }
-
-
-
-
-
-            //System.out.println(comp.getTagName());
-
         }
 
         comp.setDuration(Duration.ofSeconds(o.getLong("Duration")));
-        comp.setInitialDate(LocalDateTime.parse(o.getString("InitialDate"), formatter));
-        comp.setDateFinal(LocalDateTime.parse(o.getString("FinalDate"), formatter));
 
-
-
-
-        //comp.setTagName(o.getString("Name"));
-        //comp.setTagName("algo");
-
-
-
-        //o.
+        if(comp.getDuration().toSeconds()!=0){
+            comp.setInitialDate(LocalDateTime.parse(o.getString("InitialDate"), formatter));
+            comp.setDateFinal(LocalDateTime.parse(o.getString("FinalDate"), formatter));
+        }
 
 
         return comp;
     }
 //TODO Solucionar SetInterval.
-    private static List<Interval> feedInterval(JSONArray addIntervals, Task task) {
+
+    /**
+     * Recursive function that will iterate over the JSON object and instantiate and cast all the Projects/Tasks accordingly
+     *
+     * @param intervalArrayJson JSON array of interval task.
+     * @param task used to add its own intervals.
+     */
+
+
+    private static List<Interval> feedInterval(JSONArray intervalArrayJson, Task task) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         List<Interval> intervals = new ArrayList<>();
 
 
-        task.addInterval();
+        //task.addInterval();
         Interval auxInterval = new Interval(task);
-        for (int i = 0; i < addIntervals.length(); i++) {
-            //auxInterval.setFinalDate(addIntervals.get());
-
+        for (int i = 0; i < intervalArrayJson.length(); i++) {
+            //auxInterval.setFinalDate(intervalArrayJson.get());
+            JSONObject obj = intervalArrayJson.getJSONObject(i);
             //intervals.add(i, );
 
-            auxInterval.setDuration(Duration.ofSeconds(addIntervals.getLong(Integer.parseInt("Duration"))));
-            auxInterval.setInitialDate(LocalDateTime.parse(addIntervals.getString(Integer.parseInt("InitialDate")), formatter));
-            auxInterval.setFinalDate(LocalDateTime.parse(addIntervals.getString(Integer.parseInt("FinalDate")), formatter));
+
+            auxInterval.setDuration(Duration.ofSeconds(obj.getLong(("Duration"))));
+            auxInterval.setInitialDate(LocalDateTime.parse(obj.getString(("Initial Date")), formatter));
+            auxInterval.setFinalDate(LocalDateTime.parse(obj.getString(("Final Date")), formatter));
             intervals.add(auxInterval);
         }
 
         return intervals;
 
     }
+
+
+    /**
+     * create a JSON string for the project Root and write into a file
+     *
+     */
 
     public static void crearJSON(){
         JSONObject obj= new JSONObject();
@@ -264,6 +273,12 @@ public class Main {
 
     }
 
+
+    /**
+     * Convert the Root project  to a JSON string
+     * @param root Project null to initialize.
+     * @return JSONObject that contains the treeRoot structure
+     */
     public static JSONObject writeTreeToJSON(Project root){
         //Map<Component> map = new HashMap<>();
         JSONArray list = new JSONArray();
@@ -277,7 +292,6 @@ public class Main {
 
         if(root.getChildrenProject()!=null){
 
-            //System.out.println("mis hijos son "+root.getChildrenProject().size());
             for (Component i: root.getChildrenProject()){
                 //System.out.println(i.getTagName());
                 list.put(writeChildrenRoot(i));
@@ -288,7 +302,10 @@ public class Main {
         return jo;
     }
 
-
+    /**
+     * Recursive function that will write children root on file Json.
+     * @param childrenComponent receives the children root.
+     */
     public static JSONObject writeChildrenRoot(Component childrenComponent){
         DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         JSONObject itemChildren = new JSONObject();
@@ -325,6 +342,11 @@ public class Main {
         return itemChildren;
 
     }
+
+    /**
+     * function that will write the intervals of a task on a file json.
+     * @param i intervals task.
+     */
 
     private static JSONObject writeIntervalsTask(Interval i) {
         DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
