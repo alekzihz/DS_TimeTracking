@@ -65,7 +65,7 @@ public class Interval implements Observer {
     public void update(Observable o, Object arg) {
         setFinalDate(LocalDateTime.now());
         setDuration(duration.plusSeconds(timer.getSeconds()));
-        Printer pi = new Printer(this.getTask().getParentProject());
+        Printer pi = new Printer(task.getParentProject());
         pi.visitInterval(this);
         this.task.updateFinalDate(finalDate);
         this.task.updateDuration(duration,timer);
