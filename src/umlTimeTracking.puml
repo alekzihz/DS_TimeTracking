@@ -5,9 +5,16 @@
 
 class main{
   main(String[] args):void
-  apendiceA(): void
-  apendiceB(): void
-
+  +apendiceA(): void
+  +apendiceB(): void
+  -creatingRootForJSON(JSONObject):void
+  +readJson(): void
+  -feedChildren(JSONObject, Component): Component
+  -feedInterval(JSONArray, Task): List<Interval>
+  +crearJson(): void
+  +writeTreeJson(Project): JSONObject
+  +writeChildrenRoot(Component): JSONObject
+  -writeIntervalTask(Interval): JSONObject
 }
 abstract Component{
     {abstract}#initialDate: LocalDateTime
@@ -33,7 +40,6 @@ class Project{
     +updateInitialDate(newFinalDate: LocalDateTime): void
      {abstract}-updateFinalDate(newFinalDate: LocalDateTime): void
      {abstract}-updateDuration(newDuration: Duration, newTimer: Clock): void
-     {abstract}-acceptVisitor(v: Visitor): void
      #addComponent(component: Component):void
 }
 
@@ -50,7 +56,7 @@ class interval{
     -task: Task
     -finalDate:LocalDateTime
     -initialDate:LocalDateTime
-    -Duration:Double
+    -Duration:Duration
     -clock: Clock
 
     {abstract}-acceptVisitor(v: Visitor): void
@@ -79,7 +85,7 @@ package java.util{
 }
 
 class Clock {
-    -instanceTime: Clock
+    -instanceClock: Clock
     -seconds: int
     -timer: Timer
     -clock(seconds: int)
