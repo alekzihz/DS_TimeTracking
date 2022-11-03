@@ -110,7 +110,7 @@ NotifyTask--|>Observable
 NotifyTask-left-|>TimerTask
 
 Printer..|>Visitor
-Printer-->Observer
+Printer..|>Observer
 
 main"1..n"--> Component
 Project *--> "*"Component:children
