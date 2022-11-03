@@ -1,7 +1,9 @@
 import java.time.format.DateTimeFormatter;
 import java.util.Observable;
 import java.util.Observer;
-
+/**
+ * The class Printer that implements visitor and observer for printing the components root
+ */
 public class Printer implements Visitor, Observer {
     //private static final DateTimeFormatter DATEFORMATTER;
     private static final DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -21,6 +23,10 @@ public class Printer implements Visitor, Observer {
     public void setTree(Project root){
         this.tree = root;
     }
+    /**
+     * Print the project
+     * @param project project to print
+     */
     @Override
     public void visitProject(Project project) {
 
@@ -36,6 +42,10 @@ public class Printer implements Visitor, Observer {
 
 
     }
+    /**
+     * Print the task
+     * @param task task to print
+     */
     @Override
     public void visitTask(Task task) {
 
@@ -49,7 +59,10 @@ public class Printer implements Visitor, Observer {
     }
 
 
-
+    /**
+     * Print the interval
+     * @param interval interval to print
+     */
     @Override
     public void visitInterval(Interval interval) {
 
@@ -58,7 +71,11 @@ public class Printer implements Visitor, Observer {
         System.out.println(formatString);
 
     }
-
+    /**
+     * Implementation of observer to print the tree in every interval
+     * @param o object to observable
+     * @param arg object that observer to the observable
+     */
     @Override
     public void update(Observable o, Object arg) {
         //System.out.println(LocalDateTime.now());
