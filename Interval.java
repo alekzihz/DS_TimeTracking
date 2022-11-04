@@ -2,13 +2,17 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Observable;
 import java.util.Observer;
-
+/**
+ * The class Interval implements observer and updates interval of actual task
+ *
+ */
 public class Interval implements Observer {
     private Task task;
     private LocalDateTime finalDate;
     private LocalDateTime initialDate;
     private Duration duration;
     private Clock timer;
+
 
 
     public Interval(Task task) {
@@ -61,6 +65,12 @@ public class Interval implements Observer {
         v.visitInterval(this);
     }
 
+
+    /**
+     * Implementation of observer to update duration and final date of actual task
+     * @param o object to observable
+     * @param arg object that observer to the observable
+     */
     @Override
     public void update(Observable o, Object arg) {
         setFinalDate(LocalDateTime.now());
