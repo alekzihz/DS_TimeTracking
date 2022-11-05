@@ -1,6 +1,10 @@
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+
+/**
+ *  class Component for saving task and projects
+ */
 abstract class Component {
     protected LocalDateTime initialDate;
     protected LocalDateTime dateFinal;
@@ -60,8 +64,8 @@ abstract class Component {
     }
     //public void setTagParentProject(String tagParentProject){this.tagParentProject=tagParentProject;}
 
-    abstract void updateFinalDate(LocalDateTime newFinalDate);
-    abstract void updateDuration(Duration newDuration, Clock newTimer);
+
+    abstract void updateDurationAndFinalDate(Duration newDuration, Clock newTimer, LocalDateTime finalDate);
     protected  abstract void acceptVisitor(Visitor v);
 
 
