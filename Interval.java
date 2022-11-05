@@ -77,8 +77,8 @@ public class Interval implements Observer {
         setDuration(duration.plusSeconds(timer.getSeconds()));
         Printer pi = new Printer(task.getParentProject());
         pi.visitInterval(this);
-        this.task.updateFinalDate(finalDate);
-        this.task.updateDuration(duration,timer);
+        //this.task.updateFinalDate(finalDate);
+        this.task.updateDurationAndFinalDate(duration,timer,finalDate);
     }
     public void stopInterval() {
         timer.deleteObserver(this);
