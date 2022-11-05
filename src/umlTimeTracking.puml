@@ -22,9 +22,7 @@ abstract Component{
     {abstract}#tagName: String
     {abstract}#duration: LocalDateTime
     {abstract}#parentProject: Project
-
-    {abstract}-updateFinalDate(newFinalDate: LocalDateTime): void
-    {abstract}-updateDuration(newDuration: Duration, newTimer: Time): void
+    {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
     {abstract}-acceptVisitor(v: Visitor): void
 }
 
@@ -38,15 +36,13 @@ Interface Visitor{
 class Project{
     -childrenProject:List <component>: arrayList
     +updateInitialDate(newFinalDate: LocalDateTime): void
-     {abstract}-updateFinalDate(newFinalDate: LocalDateTime): void
-     {abstract}-updateDuration(newDuration: Duration, newTimer: Clock): void
-     #addComponent(component: Component):void
+    {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
+    #addComponent(component: Component):void
 }
 
 class Task {
     -intervalList:List <interval>
-    {abstract}-updateFinalDate(newFinalDate: LocalDateTime): void
-    {abstract}-updateDuration(newDuration: Duration, newTimer: Clock): void
+    {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
     {abstract}-acceptVisitor(v: Visitor): void
     +startTask(): void
     +stopTask(): void
