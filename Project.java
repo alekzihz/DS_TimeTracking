@@ -15,17 +15,7 @@ public class Project extends Component{
     public Project(String tagName, Project parentProject){
         super(tagName,parentProject);
     }
-    /**
-     * Update the final date, its self and parent projects
-     * @param newFinalDate  the new final date for updating
-     */
-    @Override
-    void updateFinalDate(LocalDateTime newFinalDate) {
-        setDateFinal(newFinalDate);
-        if(this.parentProject!=null){
-            parentProject.updateFinalDate(newFinalDate);
-        }
-    }
+
     /**
      * Update the initial date , its self and parent projects
      * @param InitialDate the new initial date when a child task is started
@@ -40,16 +30,19 @@ public class Project extends Component{
 
     }
     /**
-     * Update the duration, its self and parent projects
+     * Update the duration and final date, its self and parent projects
      * @param newDuration the new duration that will update
      * @param clock instance the clock
+     * @param newFinalDate  the new final date for updating
      */
     @Override
-    void updateDuration(Duration newDuration, Clock clock) {
+    void updateDurationAndFinalDate(Duration newDuration, Clock clock, LocalDateTime newFinalDate) {
 
         Printer pi = new Printer(this);
         //si duracion es 0 set newduration
+        setDateFinal(newFinalDate);
         if(this.duration.getSeconds()==0){
+
             this.setDuration(newDuration);
             pi.visitProject(this);
         }
@@ -62,7 +55,7 @@ public class Project extends Component{
 
         //mientras el proyecto tenga un padre actualizar las duracions.
         if(this.parentProject!=null) {
-                this.parentProject.updateDuration(this.duration, clock);
+                this.parentProject.updateDurationAndFinalDate(this.duration, clock,newFinalDate);
             }
     }
     /**

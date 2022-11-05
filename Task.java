@@ -23,25 +23,17 @@ public class Task extends Component{
 
 
     /**
-     * updates Data final of the task actual.
-     * @param newFinalDate Data Final new from observable.
-     * */
-    @Override
-    void updateFinalDate(LocalDateTime newFinalDate) {
-        setDateFinal(newFinalDate);
-        parentProject.updateFinalDate(newFinalDate);
-    }
-
-    /**
      * updates Duration  of the task actual.
      * @param newDuration Duration new from observable.
-     * @param clock clock of the interval task used for update project of the task.
+     * @param clock clock of the interval task used for update its parentProject.
+     * @param newFinalDate Data Final new from observable.
      * and printing the task with the attributed updated.
      * */
 
 
     @Override
-    void updateDuration(Duration newDuration, Clock clock) {
+    void updateDurationAndFinalDate(Duration newDuration, Clock clock, LocalDateTime newFinalDate) {
+        setDateFinal(newFinalDate);
         if(this.duration.getSeconds()!=0){
             setDuration(this.duration.plusSeconds(clock.getSeconds()));
         }else{
@@ -49,7 +41,7 @@ public class Task extends Component{
 
         Printer pi = new Printer(this.getParentProject());
         pi.visitTask(this);
-        parentProject.updateDuration(duration,clock);
+        parentProject.updateDurationAndFinalDate(duration,clock, newFinalDate);
         }
 
 
