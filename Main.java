@@ -1,12 +1,11 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
-//importa org.json.parser;
-
-import java.io.FileReader;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,17 +19,22 @@ import static java.lang.Thread.sleep;
 public class Main {
     public static Project root = null;
     public static Project rootA = null;
-    public static void main(String[] args) throws InterruptedException, FileNotFoundException {
+    public static void main(String[] args) throws InterruptedException {
 
+
+        //Logger log = LoggerFactory.getLogger("Main.class");
+        //log.info("algo");
+        //log.debug("debug algo");
         //apendiceA();
-        apendiceB();
+        //apendiceB();
+
+        testTag();
         //crearJSON();
-
-
-        readJson();
+        //readJson();
         exit(0);
     }
-    public static void apendiceA(){
+
+    private static void testTag() {
         rootA = new Project("root");
         Project softwareDesign= new Project("software design",rootA);
         Project softwareTesting = new Project("sotware testing",rootA);
@@ -55,8 +59,62 @@ public class Main {
         timeTracker.addComponent(firstMilestone);
 
 
+        softwareDesign.setTag("java");
+        softwareDesign.setTag("flutter");
+        softwareTesting.setTag("c++");
+        softwareTesting.setTag("Java");
+        softwareTesting.setTag("python");
+        dataBase.setTag("SQL");
+        dataBase.setTag("python");
+        dataBase.setTag("C++");
+        firstList.setTag("java");
+        secondList.setTag("Dart");
+        firstMilestone.setTag("Java");
+        firstMilestone.setTag("IntelliJ");
+
+        SearchTag s = new SearchTag("Java");
+
+
+        rootA.acceptVisitor(s);
+        //System.out.println("s");
+
 
     }
+
+    public static void apendiceA(){
+        rootA = new Project("root");
+        Project softwareDesign= new Project("software design",rootA);
+        Project softwareTesting = new Project("sotware testing",rootA);
+        Project dataBase = new Project("database", rootA);
+        Task transportation = new Task("transpotation", rootA);
+        Project Problems = new Project("problems", softwareDesign);
+        Project timeTracker = new Project("time tracker", softwareDesign);
+        Task firstList = new Task("first list", Problems);
+        Task secondList = new Task("second list", Problems);
+        Task readHandout = new Task("read handout", timeTracker);
+        Task firstMilestone = new Task("first milestone", timeTracker);
+
+        rootA.addComponent(softwareDesign);
+        rootA.addComponent(softwareTesting);
+        rootA.addComponent(dataBase);
+        rootA.addComponent(transportation);
+        softwareDesign.addComponent(Problems);
+        softwareDesign.addComponent(timeTracker);
+        Problems.addComponent(firstList);
+        Problems.addComponent(secondList);
+        timeTracker.addComponent(readHandout);
+        timeTracker.addComponent(firstMilestone);
+
+        SearchTag s = new SearchTag("java");
+
+
+    }
+    @SuppressWarnings("checkstyle:Indentation")
+    /*
+      Es necesario, para solucionar el delay respecto al tiempo de respuesta del reloj.
+     * */
+
+
     public static void apendiceB() throws InterruptedException {
 
         root = new Project("root");
@@ -82,9 +140,9 @@ public class Main {
         timeTracker.addComponent(readHandout);
         timeTracker.addComponent(firstMilestone);
 
+
         Clock clock = Clock.getInstanceClock(2);
-        //Printer printer = new Printer(root);
-        //clock.addObserver(printer);
+
 
         transportation.startTask();
         System.out.println("Transportation Starts");
@@ -109,12 +167,7 @@ public class Main {
         sleep(4000);
         transportation.stopTask();
         System.out.println("Transportation Stops");
-
-        //Printer printer = new Printer(root);
-        //clock.addObserver(printer);
-        //exit(0);
     }
-    //ArrayList<Task> task = new ArrayList<Task>();
     //todo: corregir actualizacion duracion
     //todo: agregar comentarios a las demas clases.
 
@@ -123,7 +176,7 @@ public class Main {
      * Test for reading a JSON file and loading into Root Project.
      *
      */
-    public static void readJson() throws FileNotFoundException {
+    public static void readJson() {
         String resourceName = "file.json";
 
         System.out.println("Reading Json.....");
@@ -150,7 +203,6 @@ public class Main {
      */
 
     private static void creatingRootfromJson(JSONObject object) {
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         //System.out.println(object.getJSONObject("root"));
         root = new Project(object.getJSONObject("root").getString("Name"));
@@ -174,6 +226,7 @@ public class Main {
 
         //set children on project root.
         root.setChildrenProject(listChildren);
+
     }
 
     /**
@@ -185,12 +238,11 @@ public class Main {
 
 
     private static Component feedChildren(JSONObject o, Component comp) {
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if(o.getString("Class").equals("class Task")){
             JSONArray intervals = o.getJSONArray("Intervals");
 
-            comp= new Task(o.getString("Name"));
+            comp = new Task(o.getString("Name"));
 
             if(o.getJSONArray("Intervals").length()!=0){
 
@@ -203,8 +255,11 @@ public class Main {
             JSONArray children = o.getJSONArray("children");
 
             for (int i = 0; i < children.length(); i++) {
-                Component auxComponent=null;
-                ((Project) comp).addComponent(feedChildren(children.getJSONObject(i),auxComponent));
+                //Component auxComponent=null;
+                ((Project) comp).addComponent(feedChildren(children.getJSONObject(i),null));
+
+
+
                 //(feedChildren());
             }
         }
@@ -242,7 +297,6 @@ public class Main {
             JSONObject obj = intervalArrayJson.getJSONObject(i);
             //intervals.add(i, );
 
-
             auxInterval.setDuration(Duration.ofSeconds(obj.getLong(("Duration"))));
             auxInterval.setInitialDate(LocalDateTime.parse(obj.getString(("Initial Date")), formatter));
             auxInterval.setFinalDate(LocalDateTime.parse(obj.getString(("Final Date")), formatter));
@@ -268,8 +322,8 @@ public class Main {
             file.flush();
             file.close();
 
-        } catch (IOException e) {System.out.println(e.toString());}
-        System.out.println("fichero creado");
+        } catch (IOException e) {e.printStackTrace();}
+        System.out.println("file created");
 
     }
 
@@ -311,7 +365,7 @@ public class Main {
         JSONObject itemChildren = new JSONObject();
         JSONArray listInterval = new JSONArray();
         JSONArray listComponent = new JSONArray();
-        JSONObject itemsComponent = new JSONObject();
+        JSONObject itemsComponent;
 
         itemChildren.put("Name",childrenComponent.getTagName());
         itemChildren.put("Class", childrenComponent.getClass());
@@ -335,10 +389,6 @@ public class Main {
                 itemChildren.put("children", listComponent);
             }
         }
-        //((Project)childrenComponent).getChildrenProject();
-
-        //listChildren.put(itemChildren);
-
         return itemChildren;
 
     }
