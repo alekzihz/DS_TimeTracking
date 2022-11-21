@@ -1,5 +1,8 @@
+import java.lang.reflect.Array;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -12,6 +15,8 @@ abstract class Component {
     protected Duration duration=Duration.ofSeconds(0);
     protected Project parentProject;
 
+    protected List<String> tag = new ArrayList<String>();
+
     //protected String tagParentProject;
 
 
@@ -22,6 +27,7 @@ abstract class Component {
         setTagName(tagName);
         setParentProject(parentProject);
     }
+
 
     public String getTagName() {
         return tagName;
@@ -66,11 +72,15 @@ abstract class Component {
 
 
     abstract void updateDurationAndFinalDate(Duration newDuration, Clock newTimer, LocalDateTime finalDate);
+
+    public void setTag(String tag) {
+        this.tag.add(tag);
+    }
+
+    public List<String> getTag() {
+        return tag;
+    }
+
     protected  abstract void acceptVisitor(Visitor v);
 
-
-   // public String getParentTagName() {
-
-       // return tagParentProject;
-    //}
 }
