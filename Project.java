@@ -77,7 +77,6 @@ public class Project extends Component{
 
     /**
      * initialize a new component and addd it to the childrenProject list
-     *
      * */
     protected void addComponent(Component component){
         childrenProject.add(component);
