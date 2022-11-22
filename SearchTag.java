@@ -6,7 +6,7 @@ public class SearchTag implements Visitor{
 
   String searchTag;
 
-  List<Component> result = new ArrayList<>();
+  List<String> result = new ArrayList<>();
 
   public SearchTag(String tagSearch){
     setSearchTag(tagSearch);
@@ -20,28 +20,22 @@ public class SearchTag implements Visitor{
   public void visitTask(Task task) {
 
     for (String t: task.getTag()){
-      if (t==searchTag){
-        result.add(task);
-        System.out.println("Activity: " + task.getTagName());
+      if (t.toLowerCase().equals(searchTag.toLowerCase())){
+        result.add(task.getTagName());
+        //System.out.println("Activity: " + task.getTagName());
       }
     }
-
-
-    for (int i=0;i<result.size();i++){
-     // System.out.println(result.get(i).);
-
+    if(task.getTagName()=="transpotation"){
+      System.out.println("Tag: "+searchTag + " :"+result);
     }
-
   }
 
   @Override
   public void visitProject(Project project) {
 
     for (String t: project.getTag()){
-      if (t==searchTag){
-        result.add(project);
-        System.out.println("Activity: " + project.getTagName());
-
+      if (t.toLowerCase().equals(searchTag.toLowerCase())){
+        result.add(project.getTagName());
       }
 
       if(project.getChildrenProject()!=null){
