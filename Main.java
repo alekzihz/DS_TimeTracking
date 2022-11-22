@@ -72,10 +72,16 @@ public class Main {
         firstMilestone.setTag("Java");
         firstMilestone.setTag("IntelliJ");
 
-        SearchTag s = new SearchTag("Java");
-
-
-        rootA.acceptVisitor(s);
+        SearchTag test1 = new SearchTag("java");
+        rootA.acceptVisitor(test1);
+        SearchTag test2 = new SearchTag("JAVA");
+        rootA.acceptVisitor(test2);
+        SearchTag test3 = new SearchTag("intellij");
+        rootA.acceptVisitor(test3);
+        SearchTag test4 = new SearchTag("c++");
+        rootA.acceptVisitor(test4);
+        SearchTag test5 = new SearchTag("python");
+        rootA.acceptVisitor(test5);
         //System.out.println("s");
 
 
