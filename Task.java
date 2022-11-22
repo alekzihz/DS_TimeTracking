@@ -62,7 +62,6 @@ public class Task extends Component{
 
     /**
     * initialize a new interval and addes it to the arraylist "intervalList"
-    *
     * */
     public void addInterval(){
         Interval startInterval= new Interval(this);
@@ -71,7 +70,6 @@ public class Task extends Component{
 
     /**
      * initialize the initial Date of the task and its parentProject.
-     *
      * */
     public void startTask(){
 
