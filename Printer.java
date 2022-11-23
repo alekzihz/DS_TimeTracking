@@ -1,12 +1,17 @@
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.format.DateTimeFormatter;
 import java.util.Observable;
 import java.util.Observer;
+
 /**
  * The class Printer that implements visitor and observer for printing the components root
  */
 public class Printer implements Visitor, Observer {
     //private static final DateTimeFormatter DATEFORMATTER;
     private static final DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    static final Logger log = LoggerFactory.getLogger(Printer.class);
 
 
 
@@ -14,12 +19,6 @@ public class Printer implements Visitor, Observer {
     public Printer(Project root) {
         setTree(root);
     }
-
-    public Printer() {
-
-    }
-
-
     public void setTree(Project root){
         this.tree = root;
     }
@@ -33,13 +32,7 @@ public class Printer implements Visitor, Observer {
 
             String formatString = String.format("Project : %15s %30s %30s %20s", project.getTagName(),(project.getInitialDate()).format(DATEFORMATTER),(project.getDateFinal()).format(DATEFORMATTER),
                     project.getDuration().toSeconds());
-            System.out.println(formatString);
-
-
-
-        //System.out.println("Project "+ project.getTagName() + " child of "+project.getParentTagName()+"%15s" +project.getInitialDate()+"%15s"+project.getFinalDate()+ " "
-        //            +project.getDurationSeconds());
-
+            log.info(formatString);
 
     }
     /**
@@ -52,10 +45,7 @@ public class Printer implements Visitor, Observer {
 
             String formatString = String.format("activity: %15s %30s %30s %20s", task.getTagName(),task.getInitialDate().format(DATEFORMATTER),task.getDateFinal().format(DATEFORMATTER),
                     task.getDuration().toSeconds());
-            System.out.println(formatString);
-
-        //System.out.println("Task " + task.getTagName() + " child of " + task.getParentProject().getTagName() + " " + task.getInitialDate() + " " + task.getFinalDate() + " "
-        //        + task.getDurationSeconds());
+            log.info(formatString);
     }
 
 
@@ -68,7 +58,10 @@ public class Printer implements Visitor, Observer {
 
         String formatString = String.format("Interval:   %44s %30s %20s", interval.getInitialDate().format(DATEFORMATTER),interval.getFinalDate().format(DATEFORMATTER),
                 interval.getDuration().toSeconds());
-        System.out.println(formatString);
+
+
+
+       log.info(formatString);
 
     }
     /**
