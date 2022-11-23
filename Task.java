@@ -1,3 +1,7 @@
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.beans.PropertyEditor;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,13 +16,25 @@ import java.util.List;
 
 public class Task extends Component{
     protected List<Interval> intervalList=new ArrayList<>();
+    static final Logger log = LoggerFactory.getLogger(Printer.class);
 
     public Task(String tagName, Project parentProject){
         super(tagName,parentProject);
+        invariant();
 
     }
     public Task (String tagName){
         super(tagName);
+        invariant();
+    }
+
+
+    private void invariant(){
+        assert this.getTagName() != "": "error, task not created";
+        assert this != null: "error, task not created";
+
+
+        assert this.getTagName() != null: "error, task must have a name";
     }
 
 
@@ -78,7 +94,7 @@ public class Task extends Component{
            this.parentProject.updateInitialDate(LocalDateTime.now());
         }
         addInterval();
-        //System.out.println(this.tagName+"Starts");
+        log.info(this.tagName+" Starts");
 
     }
 
@@ -89,6 +105,7 @@ public class Task extends Component{
         //System.out.println(this.tagName+" Stops");
         Interval stop=intervalList.get(intervalList.size()-1);
         stop.stopInterval();
+        log.info(this.tagName+ " Stops");
     }
 
 }

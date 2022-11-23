@@ -10,9 +10,25 @@ import java.util.List;
 public class Project extends Component{
     private List<Component> childrenProject=new ArrayList<>();
     public Project(String tagName) {
+
         super(tagName);
+        //assert (tagName==null): "error it must have a name";
+        invariant();
+
+
+    }
+
+    public void invariant(){
+        assert this.getTagName() != "": "error, project must have a name";
+        assert this.getTagName() != null: "error, project must have a name";
+
+        assert this != null: "error ";
+
+
     }
     public Project(String tagName, Project parentProject){
+
+
         super(tagName,parentProject);
     }
 
