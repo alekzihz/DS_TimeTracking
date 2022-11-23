@@ -1,3 +1,5 @@
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.read.ListAppender;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -6,11 +8,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
+import java.lang.module.Configuration;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.LogManager;
 
 
 import static java.lang.System.exit;
@@ -19,16 +24,41 @@ import static java.lang.Thread.sleep;
 public class Main {
     public static Project root = null;
     public static Project rootA = null;
-    public static void main(String[] args) throws InterruptedException {
+    static final Logger log = LoggerFactory.getLogger("Main");
+    public static void main(String[] args) throws InterruptedException, IOException {
 
 
-        //Logger log = LoggerFactory.getLogger("Main.class");
+        //Logger log = LoggerFactory.getLogger(Main.class.getName());
+
+        Task a = new Task("");
+        //a.invariant();
+
+        //LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
+
+
+        //LoggerConfig rootLoggerConfig = configuration.getLoggerConfig("");
+        //ListAppender listAppender = new ListAppender("testAppender");
+
+
+
         //log.info("algo");
-        //log.debug("debug algo");
+        //log.debug("debug algo, problem");
+
+       // if (log.isDebugEnabled()){
+       //    log.debug("debug algo, problem");
+
+       // }
+
+
+        //FileHandler fileXml = new FileHandler("Logging.xml");
+        //log.addHandler(fileXml);
+
+
+
         //apendiceA();
         //apendiceB();
 
-        testTag();
+        //testTag();
         //crearJSON();
         //readJson();
         exit(0);
@@ -151,28 +181,28 @@ public class Main {
 
 
         transportation.startTask();
-        System.out.println("Transportation Starts");
+        //System.out.println("Transportation Starts");
         sleep(6000);
         transportation.stopTask();
         sleep(2000);
-        System.out.println("Transportation Stops");
+        //System.out.println("Transportation Stops");
         firstList.startTask();
-        System.out.println("First list Starts");
+        //System.out.println("First list Starts");
         sleep(6000);
         secondList.startTask();
-        System.out.println("Second list Starts");
+        //System.out.println("Second list Starts");
         sleep(4000);
         firstList.stopTask();
-        System.out.println("First list Stops");
+        //System.out.println("First list Stops");
         sleep(2000);
         secondList.stopTask();
-        System.out.println("Second list Stops");
+       // System.out.println("Second list Stops");
         sleep(2000);
         transportation.startTask();
-        System.out.println("Transportation Starts");
+       // System.out.println("Transportation Starts");
         sleep(4000);
         transportation.stopTask();
-        System.out.println("Transportation Stops");
+       // System.out.println("Transportation Stops");
     }
     //todo: corregir actualizacion duracion
     //todo: agregar comentarios a las demas clases.
@@ -185,7 +215,7 @@ public class Main {
     public static void readJson() {
         String resourceName = "file.json";
 
-        System.out.println("Reading Json.....");
+        log.info("Reading Json.....");
         InputStream is = Main.class.getResourceAsStream(resourceName);
         if (is == null) {
             throw new NullPointerException("Cannot find resource file " + resourceName);
@@ -195,7 +225,7 @@ public class Main {
         JSONObject object = new JSONObject(tokener);
         creatingRootfromJson(object);
 
-        System.out.println("Project created");
+        log.info("Project created");
 
         //root.setDuration(Duration.ofSeconds(2));
 
@@ -329,7 +359,7 @@ public class Main {
             file.close();
 
         } catch (IOException e) {e.printStackTrace();}
-        System.out.println("file created");
+        log.info("file created");
 
     }
 
