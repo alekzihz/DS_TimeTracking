@@ -1,4 +1,5 @@
 @startuml
+
 'https://plantuml.com/class-diagram
 
 
@@ -36,7 +37,9 @@ Interface Visitor{
 
 class Project{
     -childrenProject:List <component>: arrayList
-    +invariant():void
+    -log: Logger
+    
+    +invariant(): boolean
     +updateInitialDate(newFinalDate: LocalDateTime): void
     {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
     #addComponent(component: Component):void
@@ -45,7 +48,9 @@ class Project{
 
 class Task {
     -intervalList:List <interval>
-    -invariant():void
+    -log: Logger
+    
+    +invariant(): boolean
     {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
     {abstract}-acceptVisitor(v: Visitor): void
     +addInterval(): void
@@ -58,7 +63,9 @@ class interval{
     -initialDate:LocalDateTime
     -Duration:Duration
     -clock: Clock
-
+    -log: Logger
+    
+    +invariant(): boolean
     {abstract}-acceptVisitor(v: Visitor): void
     {abstract}-update(ob: Observable, arg: Object): void
     +stopInterval(): void
@@ -98,6 +105,9 @@ class NotifyTask{
 }
 
 class Printer{
+    -log: Logger
+
+    +invariant(): Boolean
     +visitTask(task: Task): void
     +visitProject(project: Project): void
     +visitInterval( interval: Interval): void
@@ -105,9 +115,22 @@ class Printer{
     +{abstract}update(arg0: Observable, arg1: Object)
 }
 
+
+class SearchTag {
+    -searchTag: String
+    -result: List<String>
+    -log: Logger
+    
+    
+    +invariant(): boolean
+
+}
+
 Clock-left->NotifyTask
 NotifyTask--|>Observable
 NotifyTask-left-|>TimerTask
+
+SearchTag..|>Visitor
 
 Printer..|>Visitor
 Printer..|>Observer
@@ -121,6 +144,5 @@ Clock--|> Observable
 interval ..|> Observer
 Observable*--left>"*"Observer:observers
 Task "1..n"--> interval:interval
-
 
 @enduml
