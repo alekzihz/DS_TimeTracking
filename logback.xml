@@ -15,13 +15,26 @@
     </appender>
 
     <!--Fita 1-->
+    <logger name="Component" level="warn"/>
+    <logger name="Task" level="warn"/>
+    <logger name="Project" level="warn"/>
+    <logger name="Interval" level="INFO"/>
+    <logger name="printer" level="warn"/>
 
 
     <!--Fita 2-->
+    <logger name="SearchTag" level="INFO"/>
+
+
+
+
 
     <root level="info">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </root>
+
+
+
 </configuration>
 
