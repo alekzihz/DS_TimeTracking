@@ -30,12 +30,12 @@ public class SearchTag implements Visitor{
   public void visitTask(Task task) {
 
     for (String t: task.getTag()){
-      if (t.toLowerCase().equals(searchTag.toLowerCase())){
+      if (t.equalsIgnoreCase(searchTag)){
         result.add(task.getTagName());
         //System.out.println("Activity: " + task.getTagName());
       }
     }
-    if(task.getTagName()=="transpotation"){
+    if(task.getTagName().equals("transpotation")){
       log.info("Tag: "+searchTag + " :"+result);
 
     }
@@ -45,7 +45,7 @@ public class SearchTag implements Visitor{
   public void visitProject(Project project) {
 
     for (String t: project.getTag()){
-      if (t.toLowerCase().equals(searchTag.toLowerCase())){
+      if (t.equalsIgnoreCase(searchTag)){
         result.add(project.getTagName());
       }
 

@@ -24,30 +24,20 @@ public class Project extends Component{
         super(tagName);
         //assert (tagName==null): "error it must have a name";
         assert invariant();
+        log.info("Adding Project "+ tagName);
 
-
-    }
-
-    private boolean invariant(){
-        //assert this.getTagName() != "": "error, project must have a name";
-        //assert this.getTagName() != null: "error, project must have a name";
-
-        //assert this != null: "error ";
-
-        if(this.getTagName() =="" || this.getTagName() ==null || this ==null){
-            log.error("error, project must have a name");
-            return false;
-        }
-        return true;
 
 
 
     }
+
     public Project(String tagName, Project parentProject){
 
 
         super(tagName,parentProject);
         assert invariant();
+        log.info("Adding Project "+ tagName);
+        log.debug("Adding Project "+ tagName+ " to " + "Project "+parentProject.getTagName());
 
     }
 
@@ -86,7 +76,8 @@ public class Project extends Component{
         }
         //mientras sea diferente de 0 sumar la duracion anterior con el ciclo del reloj(2).
         else{
-                this.duration=this.duration.plusSeconds(clock.getSeconds());
+            assert clock != null;
+            this.duration=this.duration.plusSeconds(clock.getSeconds());
                 //this.setDuration(this.duration);
                 pi.visitProject(this);
         }
@@ -128,6 +119,17 @@ public class Project extends Component{
         childrenProject.add(component);
         component.setParentProject(this);
        //component.setTagParentProject(this.tagName);
+
+    }
+
+    private boolean invariant(){
+        if(this.getTagName().equals("") || this.getTagName().equals(null) || this==null){
+            log.error("error, project must have a name");
+            return false;
+        }
+        return true;
+
+
 
     }
 

@@ -4,7 +4,6 @@ import org.slf4j.LoggerFactory;
 import java.time.format.DateTimeFormatter;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
 
 /**
  * The class Printer that implements visitor and observer for printing the components root
@@ -12,7 +11,7 @@ import java.util.logging.Level;
 public class Printer implements Visitor, Observer {
     //private static final DateTimeFormatter DATEFORMATTER;
     private static final DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private final Logger log = LoggerFactory.getLogger("Print");
+    private final Logger log = LoggerFactory.getLogger("printer");
     private Project tree;
     public Printer(Project root) {
 

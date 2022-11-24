@@ -76,11 +76,6 @@ public class Interval implements Observer {
         this.timer = timer;
     }
 
-    protected void acceptVisitor(Visitor v){
-        v.visitInterval(this);
-    }
-
-
     /**
      * Implementation of observer to update duration and final date of actual task
      * @param o object to observable

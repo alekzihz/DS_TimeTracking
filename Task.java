@@ -1,7 +1,5 @@
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.beans.PropertyEditor;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,16 +19,19 @@ public class Task extends Component{
     public Task(String tagName, Project parentProject){
         super(tagName,parentProject);
         assert invariant();
+        log.info("adding task "+tagName);
+        log.debug("Adding Task "+ tagName + "to project " + this.parentProject.getTagName());
 
     }
     public Task (String tagName){
         super(tagName);
         assert invariant();
+        log.info("adding task "+tagName);
     }
 
 
     private boolean invariant(){
-        if(this.getTagName() =="" || this.getTagName() ==null || this ==null){
+        if(this.getTagName().equals("") || this.getTagName().equals(null) || this ==null){
             log.error("error, Task must have a name");
             return false;
         }
@@ -53,6 +54,7 @@ public class Task extends Component{
 
         setDateFinal(newFinalDate);
         if(this.duration.getSeconds()!=0){
+            assert clock!=null:"clock is not started";
             setDuration(this.duration.plusSeconds(clock.getSeconds()));
         }else{
             setDuration(newDuration);}
@@ -115,11 +117,6 @@ public class Task extends Component{
      * Remove the actual interval from the arraylist "intervalList" and stops it
      */
     public void stopTask(){
-        //System.out.println(this.tagName+" Stops");
-
-        //assert this.getTagName() != "": "error, project must have a name";
-        //assert this.getTagName() != null: "error, project must have a name";
-
         assert intervalList.size()>0: "error, "+ "Task: "+this.getTagName()+ " has not been started";
 
         Interval stop=intervalList.get(intervalList.size()-1);

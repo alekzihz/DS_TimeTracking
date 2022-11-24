@@ -1,5 +1,4 @@
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.core.read.ListAppender;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -7,60 +6,37 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-
-import java.lang.module.Configuration;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.FileHandler;
-import java.util.logging.LogManager;
-
 
 import static java.lang.System.exit;
 import static java.lang.Thread.sleep;
+
+
+//TODO: CheckStyle chequiara
+//TODO: Actualizar UML
+//TODO: acabar log and configuration.xml
 
 public class Main {
     public static Project root = null;
     public static Project rootA = null;
     static final Logger log = LoggerFactory.getLogger("Main");
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) throws InterruptedException{
 
-
-        //Logger log = LoggerFactory.getLogger(Main.class.getName());
-
-        Task a = new Task("");
-        //a.invariant();
-
-        //LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
-
-
-        //LoggerConfig rootLoggerConfig = configuration.getLoggerConfig("");
-        //ListAppender listAppender = new ListAppender("testAppender");
-
-
-
-        //log.info("algo");
-        //log.debug("debug algo, problem");
-
-       // if (log.isDebugEnabled()){
-       //    log.debug("debug algo, problem");
-
-       // }
-
-
-        //FileHandler fileXml = new FileHandler("Logging.xml");
-        //log.addHandler(fileXml);
 
 
 
         //apendiceA();
+        testTag();
         //apendiceB();
-
-        //testTag();
         //crearJSON();
         //readJson();
+
+
+
         exit(0);
     }
 
@@ -254,8 +230,8 @@ public class Main {
         //loop throught children root.
         for (int i = 0; i < children.length(); i++) {
             JSONObject obj = children.getJSONObject(i);
-            Component comp = null;
-            comp = feedChildren(obj, comp);
+            Component comp;
+            comp = feedChildren(obj, null);
             listChildren.add(comp);
             root.addComponent(comp);
         }
@@ -269,30 +245,30 @@ public class Main {
      * Recursive function that will iterate over the JSON object and instantiate and cast all the Projects/Tasks accordingly
      *
      * @param o JSON object of children root.
-     * @param comp used to added children-children project/task.
+     * @param component used to added children-children project/task.
      */
 
 
-    private static Component feedChildren(JSONObject o, Component comp) {
+    private static Component feedChildren(JSONObject o, Component component) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if(o.getString("Class").equals("class Task")){
             JSONArray intervals = o.getJSONArray("Intervals");
 
-            comp = new Task(o.getString("Name"));
+            component = new Task(o.getString("Name"));
 
             if(o.getJSONArray("Intervals").length()!=0){
 
-                ((Task) comp).setIntervalList(feedInterval(intervals, ((Task) comp)));
+                ((Task) component).setIntervalList(feedInterval(intervals, ((Task) component)));
 
             }
         }
         else{
-            comp =new Project(o.getString("Name"));
+            component =new Project(o.getString("Name"));
             JSONArray children = o.getJSONArray("children");
 
             for (int i = 0; i < children.length(); i++) {
                 //Component auxComponent=null;
-                ((Project) comp).addComponent(feedChildren(children.getJSONObject(i),null));
+                ((Project) component).addComponent(feedChildren(children.getJSONObject(i),null));
 
 
 
@@ -300,15 +276,15 @@ public class Main {
             }
         }
 
-        comp.setDuration(Duration.ofSeconds(o.getLong("Duration")));
+        component.setDuration(Duration.ofSeconds(o.getLong("Duration")));
 
-        if(comp.getDuration().toSeconds()!=0){
-            comp.setInitialDate(LocalDateTime.parse(o.getString("InitialDate"), formatter));
-            comp.setDateFinal(LocalDateTime.parse(o.getString("FinalDate"), formatter));
+        if(component.getDuration().toSeconds()!=0){
+            component.setInitialDate(LocalDateTime.parse(o.getString("InitialDate"), formatter));
+            component.setDateFinal(LocalDateTime.parse(o.getString("FinalDate"), formatter));
         }
 
 
-        return comp;
+        return component;
     }
 //TODO Solucionar SetInterval.
 

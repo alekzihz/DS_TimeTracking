@@ -1,4 +1,5 @@
-import java.lang.reflect.Array;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,17 +16,23 @@ abstract class Component {
     protected Duration duration=Duration.ofSeconds(0);
     protected Project parentProject;
 
-    protected List<String> tag = new ArrayList<String>();
+    protected List<String> tag = new ArrayList<>();
+    private final Logger log = LoggerFactory.getLogger("Component");
+
 
     //protected String tagParentProject;
 
 
     public Component(String tagName){
         setTagName(tagName);
+        log.info("adding component "+tagName);
+        log.debug("Adding Component "+ tagName);
+
     }
     public Component(String tagName, Project parentProject){
         setTagName(tagName);
         setParentProject(parentProject);
+        log.debug("Adding Component "+ tagName + " to " + parentProject.getTagName());
     }
 
 

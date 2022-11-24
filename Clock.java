@@ -1,3 +1,6 @@
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -8,6 +11,8 @@ public class Clock extends Observable {
     private int seconds;
     private static Clock instanceClock;
     private static Timer timer;
+    private final Logger log = LoggerFactory.getLogger("Clock");
+
     /**
      * The constructor of the clock class
      * @param seconds Every seconds that clock will notify to its observer
@@ -18,6 +23,7 @@ public class Clock extends Observable {
         setSeconds(seconds);
         setTimer(new Timer());
         timer.scheduleAtFixedRate(new NotifyTask(),0, this.seconds *1000);
+        log.debug("clock has been created");
 
         assert this!=null: "The clock could not been started";
        }
