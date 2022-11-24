@@ -39,7 +39,7 @@ class Project{
     -childrenProject:List <component>: arrayList
     -log: Logger
     
-    +invariant(): boolean
+    -invariant(): boolean
     +updateInitialDate(newFinalDate: LocalDateTime): void
     {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
     #addComponent(component: Component):void
@@ -50,7 +50,7 @@ class Task {
     -intervalList:List <interval>
     -log: Logger
     
-    +invariant(): boolean
+    -invariant(): boolean
     {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
     {abstract}-acceptVisitor(v: Visitor): void
     +addInterval(): void
@@ -65,7 +65,7 @@ class interval{
     -clock: Clock
     -log: Logger
     
-    +invariant(): boolean
+    -invariant(): boolean
     {abstract}-acceptVisitor(v: Visitor): void
     {abstract}-update(ob: Observable, arg: Object): void
     +stopInterval(): void
@@ -107,7 +107,7 @@ class NotifyTask{
 class Printer{
     -log: Logger
 
-    +invariant(): Boolean
+    -invariant(): Boolean
     +visitTask(task: Task): void
     +visitProject(project: Project): void
     +visitInterval( interval: Interval): void
@@ -122,7 +122,7 @@ class SearchTag {
     -log: Logger
     
     
-    +invariant(): boolean
+    -invariant(): boolean
 
 }
 
@@ -143,6 +143,6 @@ Component <|--down(Project,Task)
 Clock--|> Observable
 interval ..|> Observer
 Observable*--left>"*"Observer:observers
-Task "1..n"--> interval:interval
+Task "1..n"*--> interval:interval
 
 @enduml
