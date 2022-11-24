@@ -1,3 +1,6 @@
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,22 +10,36 @@ import java.util.List;
  * and has functions to update its attributes. It updates all of its parentProjects with new information from
  * the observable Clock.
  */
+
+
+
+
 public class Project extends Component{
     private List<Component> childrenProject=new ArrayList<>();
+    private final Logger log = LoggerFactory.getLogger("Project");
+
     public Project(String tagName) {
+
 
         super(tagName);
         //assert (tagName==null): "error it must have a name";
-        invariant();
+        assert invariant();
 
 
     }
 
-    public void invariant(){
-        assert this.getTagName() != "": "error, project must have a name";
-        assert this.getTagName() != null: "error, project must have a name";
+    private boolean invariant(){
+        //assert this.getTagName() != "": "error, project must have a name";
+        //assert this.getTagName() != null: "error, project must have a name";
 
-        assert this != null: "error ";
+        //assert this != null: "error ";
+
+        if(this.getTagName() =="" || this.getTagName() ==null || this ==null){
+            log.error("error, project must have a name");
+            return false;
+        }
+        return true;
+
 
 
     }
@@ -30,6 +47,8 @@ public class Project extends Component{
 
 
         super(tagName,parentProject);
+        assert invariant();
+
     }
 
     /**
@@ -54,6 +73,9 @@ public class Project extends Component{
     @Override
     void updateDurationAndFinalDate(Duration newDuration, Clock clock, LocalDateTime newFinalDate) {
 
+
+        assert clock!=null || newDuration!=null || newFinalDate!=null: "error updating datas";
+
         Printer pi = new Printer(this);
         //si duracion es 0 set newduration
         setDateFinal(newFinalDate);
@@ -73,16 +95,24 @@ public class Project extends Component{
         if(this.parentProject!=null) {
                 this.parentProject.updateDurationAndFinalDate(this.duration, clock,newFinalDate);
             }
+
+        assert this!=null:"error, updating project";
+
     }
     /**
      * @param v type visitor for visiting the Project
      */
     @Override
     protected void acceptVisitor(Visitor v) {
+
+        assert v !=null: "error, visit project cannot be null";
         v.visitProject(this);
         for(Component i :childrenProject){
             i.acceptVisitor(v);
         }
+
+        assert this !=null: "error visiting project";
+
     }
     public List<Component> getChildrenProject() {
         return childrenProject;

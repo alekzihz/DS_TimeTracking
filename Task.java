@@ -16,25 +16,25 @@ import java.util.List;
 
 public class Task extends Component{
     protected List<Interval> intervalList=new ArrayList<>();
-    static final Logger log = LoggerFactory.getLogger(Printer.class);
+    private final Logger log = LoggerFactory.getLogger("Task");
 
     public Task(String tagName, Project parentProject){
         super(tagName,parentProject);
-        invariant();
+        assert invariant();
 
     }
     public Task (String tagName){
         super(tagName);
-        invariant();
+        assert invariant();
     }
 
 
-    private void invariant(){
-        assert this.getTagName() != "": "error, task not created";
-        assert this != null: "error, task not created";
-
-
-        assert this.getTagName() != null: "error, task must have a name";
+    private boolean invariant(){
+        if(this.getTagName() =="" || this.getTagName() ==null || this ==null){
+            log.error("error, Task must have a name");
+            return false;
+        }
+        return true;
     }
 
 
@@ -49,6 +49,8 @@ public class Task extends Component{
 
     @Override
     void updateDurationAndFinalDate(Duration newDuration, Clock clock, LocalDateTime newFinalDate) {
+        assert clock!=null || newDuration!=null || newFinalDate!=null: "error updating datas";
+
         setDateFinal(newFinalDate);
         if(this.duration.getSeconds()!=0){
             setDuration(this.duration.plusSeconds(clock.getSeconds()));
@@ -58,7 +60,10 @@ public class Task extends Component{
         Printer pi = new Printer(this.getParentProject());
         pi.visitTask(this);
         parentProject.updateDurationAndFinalDate(duration,clock, newFinalDate);
-        }
+        assert this!=null:"error, updating task";
+
+    }
+
 
 
     /**
@@ -67,7 +72,12 @@ public class Task extends Component{
 
     @Override
     protected void acceptVisitor(Visitor v) {
+        assert v !=null: "error, visit task cannot be null";
+
+
         v.visitTask(this);
+
+        assert this !=null: "error visiting task";
     }
     public List<Interval> getIntervalList() {
         return intervalList;
@@ -80,15 +90,18 @@ public class Task extends Component{
     * initialize a new interval and addes it to the arraylist "intervalList"
     * */
     public void addInterval(){
+
+        assert this !=null: "error task " + this.getTagName() + "could not been started";
         Interval startInterval= new Interval(this);
         intervalList.add(startInterval);
+
+        assert intervalList.size()>0 : "error adding interval";
     }
 
     /**
      * initialize the initial Date of the task and its parentProject.
      * */
     public void startTask(){
-
         if(this.initialDate==null){
            setInitialDate(LocalDateTime.now());
            this.parentProject.updateInitialDate(LocalDateTime.now());
@@ -103,9 +116,20 @@ public class Task extends Component{
      */
     public void stopTask(){
         //System.out.println(this.tagName+" Stops");
+
+        //assert this.getTagName() != "": "error, project must have a name";
+        //assert this.getTagName() != null: "error, project must have a name";
+
+        assert intervalList.size()>0: "error, "+ "Task: "+this.getTagName()+ " has not been started";
+
         Interval stop=intervalList.get(intervalList.size()-1);
         stop.stopInterval();
         log.info(this.tagName+ " Stops");
+
+        assert this !=null: "error stopping task "+ this.getTagName();
+
+
+
     }
 
 }

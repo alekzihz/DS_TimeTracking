@@ -1,3 +1,6 @@
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Observable;
@@ -12,10 +15,12 @@ public class Interval implements Observer {
     private LocalDateTime initialDate;
     private Duration duration;
     private Clock timer;
-
+    private final Logger log = LoggerFactory.getLogger("Interval");
 
 
     public Interval(Task task) {
+
+        assert task!=null:"error task is null";
         Clock newTimer = Clock.getInstanceClock(2);
         setTask(task);
         setInitialDate(LocalDateTime.now());
@@ -23,6 +28,16 @@ public class Interval implements Observer {
         setDuration(Duration.ofSeconds(0));
         newTimer.addObserver(this);
         setTimer(newTimer);
+
+        assert invariant();
+    }
+
+    private boolean invariant(){
+        if(task ==null){
+            log.error("error, Task does not exist");
+            return false;
+        }
+        return true;
     }
 
     public Task getTask() {

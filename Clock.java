@@ -13,9 +13,13 @@ public class Clock extends Observable {
      * @param seconds Every seconds that clock will notify to its observer
      */
     private Clock(int seconds) {
+
+        assert seconds>0: "error, the clock needs a period in seconds greater than 0";
         setSeconds(seconds);
         setTimer(new Timer());
         timer.scheduleAtFixedRate(new NotifyTask(),0, this.seconds *1000);
+
+        assert this!=null: "The clock could not been started";
        }
     /**
      * Implementation of Singleton
@@ -26,8 +30,6 @@ public class Clock extends Observable {
         }
         return instanceClock;
     }
-
-
     public int getSeconds() {
         return seconds;
     }
