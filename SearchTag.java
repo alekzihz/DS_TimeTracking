@@ -1,19 +1,29 @@
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchTag implements Visitor{
 
 
-  String searchTag;
+  private String searchTag;
 
-  List<String> result = new ArrayList<>();
+  private List<String> result = new ArrayList<>();
+
+  private final Logger log = LoggerFactory.getLogger("SearchTag");
+
 
   public SearchTag(String tagSearch){
     setSearchTag(tagSearch);
+    assert invariant();
   }
 
   public void setSearchTag(String searchTag) {
     this.searchTag = searchTag;
+  }
+  private boolean invariant(){
+    return searchTag!=null;
   }
 
   @Override
@@ -26,7 +36,8 @@ public class SearchTag implements Visitor{
       }
     }
     if(task.getTagName()=="transpotation"){
-      System.out.println("Tag: "+searchTag + " :"+result);
+      log.info("Tag: "+searchTag + " :"+result);
+
     }
   }
 
