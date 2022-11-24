@@ -5,10 +5,11 @@
 
 class main{
   main(String[] args):void
+  -testTag():void
   +apendiceA(): void
   +apendiceB(): void
-  -creatingRootForJSON(JSONObject):void
   +readJson(): void
+  -creatingRootForJSON(JSONObject):void
   -feedChildren(JSONObject, Component): Component
   -feedInterval(JSONArray, Task): List<Interval>
   +crearJson(): void
@@ -35,18 +36,21 @@ Interface Visitor{
 
 class Project{
     -childrenProject:List <component>: arrayList
+    +invariant():void
     +updateInitialDate(newFinalDate: LocalDateTime): void
     {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
     #addComponent(component: Component):void
+    #acceptVisitor(v: Visitor):void
 }
 
 class Task {
     -intervalList:List <interval>
+    -invariant():void
     {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
     {abstract}-acceptVisitor(v: Visitor): void
+    +addInterval(): void
     +startTask(): void
     +stopTask(): void
-    +addInterval(): void
 }
 class interval{
     -task: Task
