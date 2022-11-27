@@ -1,42 +1,29 @@
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import static java.lang.System.exit;
 import static java.lang.Thread.sleep;
-
-
-//TODO: CheckStyle chequiara
-//TODO: Actualizar UML
-//TODO: acabar log and configuration.xml
 
 public class Main {
     public static Project root = null;
     public static Project rootA = null;
-    static final Logger log = LoggerFactory.getLogger("Main");
-    public static void main(String[] args) throws InterruptedException{
-
-
-
-
+    public static void main(String[] args){
         //apendiceA();
-        testTag();
         //apendiceB();
+
+        testTag();
         //crearJSON();
         //readJson();
-
-
-
         exit(0);
     }
 
@@ -96,9 +83,9 @@ public class Main {
     public static void apendiceA(){
         rootA = new Project("root");
         Project softwareDesign= new Project("software design",rootA);
-        Project softwareTesting = new Project("sotware testing",rootA);
+        Project softwareTesting = new Project("software testing",rootA);
         Project dataBase = new Project("database", rootA);
-        Task transportation = new Task("transpotation", rootA);
+        Task transportation = new Task("transportation", rootA);
         Project Problems = new Project("problems", softwareDesign);
         Project timeTracker = new Project("time tracker", softwareDesign);
         Task firstList = new Task("first list", Problems);
@@ -131,9 +118,9 @@ public class Main {
 
         root = new Project("root");
         Project softwareDesign= new Project("software design",root);
-        Project softwareTesting = new Project("sotware testing",root);
+        Project softwareTesting = new Project("software testing",root);
         Project dataBase = new Project("database", root);
-        Task transportation = new Task("transpotation", root);
+        Task transportation = new Task("transportation", root);
         Project Problems = new Project("problems", softwareDesign);
         Project timeTracker = new Project("time tracker", softwareDesign);
         Task firstList = new Task("first list", Problems);
@@ -172,13 +159,13 @@ public class Main {
         //System.out.println("First list Stops");
         sleep(2000);
         secondList.stopTask();
-       // System.out.println("Second list Stops");
+        //System.out.println("Second list Stops");
         sleep(2000);
         transportation.startTask();
-       // System.out.println("Transportation Starts");
+        //System.out.println("Transportation Starts");
         sleep(4000);
         transportation.stopTask();
-       // System.out.println("Transportation Stops");
+        //System.out.println("Transportation Stops");
     }
     //todo: corregir actualizacion duracion
     //todo: agregar comentarios a las demas clases.
@@ -191,7 +178,7 @@ public class Main {
     public static void readJson() {
         String resourceName = "file.json";
 
-        log.info("Reading Json.....");
+        //System.out.println("Reading Json.....");
         InputStream is = Main.class.getResourceAsStream(resourceName);
         if (is == null) {
             throw new NullPointerException("Cannot find resource file " + resourceName);
@@ -201,7 +188,7 @@ public class Main {
         JSONObject object = new JSONObject(tokener);
         creatingRootfromJson(object);
 
-        log.info("Project created");
+        //System.out.println("Project created");
 
         //root.setDuration(Duration.ofSeconds(2));
 
@@ -245,30 +232,30 @@ public class Main {
      * Recursive function that will iterate over the JSON object and instantiate and cast all the Projects/Tasks accordingly
      *
      * @param o JSON object of children root.
-     * @param component used to added children-children project/task.
+     * @param comp used to added children-children project/task.
      */
 
 
-    private static Component feedChildren(JSONObject o, Component component) {
+    private static Component feedChildren(JSONObject o, Component comp) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if(o.getString("Class").equals("class Task")){
             JSONArray intervals = o.getJSONArray("Intervals");
 
-            component = new Task(o.getString("Name"));
+            comp = new Task(o.getString("Name"));
 
             if(o.getJSONArray("Intervals").length()!=0){
 
-                ((Task) component).setIntervalList(feedInterval(intervals, ((Task) component)));
+                ((Task) comp).setIntervalList(feedInterval(intervals, ((Task) comp)));
 
             }
         }
         else{
-            component =new Project(o.getString("Name"));
+            comp =new Project(o.getString("Name"));
             JSONArray children = o.getJSONArray("children");
 
             for (int i = 0; i < children.length(); i++) {
-                //Component auxComponent=null;
-                ((Project) component).addComponent(feedChildren(children.getJSONObject(i),null));
+                //firstmilestone.Component auxComponent=null;
+                ((Project) comp).addComponent(feedChildren(children.getJSONObject(i),null));
 
 
 
@@ -276,15 +263,15 @@ public class Main {
             }
         }
 
-        component.setDuration(Duration.ofSeconds(o.getLong("Duration")));
+        comp.setDuration(Duration.ofSeconds(o.getLong("Duration")));
 
-        if(component.getDuration().toSeconds()!=0){
-            component.setInitialDate(LocalDateTime.parse(o.getString("InitialDate"), formatter));
-            component.setDateFinal(LocalDateTime.parse(o.getString("FinalDate"), formatter));
+        if(comp.getDuration().toSeconds()!=0){
+            comp.setInitialDate(LocalDateTime.parse(o.getString("InitialDate"), formatter));
+            comp.setDateFinal(LocalDateTime.parse(o.getString("FinalDate"), formatter));
         }
 
 
-        return component;
+        return comp;
     }
 //TODO Solucionar SetInterval.
 
@@ -335,7 +322,7 @@ public class Main {
             file.close();
 
         } catch (IOException e) {e.printStackTrace();}
-        log.info("file created");
+        //System.out.println("file created");
 
     }
 
@@ -346,7 +333,7 @@ public class Main {
      * @return JSONObject that contains the treeRoot structure
      */
     public static JSONObject writeTreeToJSON(Project root){
-        //Map<Component> map = new HashMap<>();
+        //Map<firstmilestone.Component> map = new HashMap<>();
         JSONArray list = new JSONArray();
         DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         JSONObject jo = new JSONObject();
