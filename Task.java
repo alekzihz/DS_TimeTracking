@@ -51,7 +51,7 @@ public class Task extends Component{
     @Override
     void updateDurationAndFinalDate(Duration newDuration, Clock clock, LocalDateTime newFinalDate) {
         assert clock!=null || newDuration!=null || newFinalDate!=null: "error updating datas";
-
+        assert invariant();
         setDateFinal(newFinalDate);
         if(this.duration.getSeconds()!=0){
             assert clock!=null:"clock is not started";
@@ -62,7 +62,10 @@ public class Task extends Component{
         Printer pi = new Printer(this.getParentProject());
         pi.visitTask(this);
         parentProject.updateDurationAndFinalDate(duration,clock, newFinalDate);
+
         assert this!=null:"error, updating task";
+        log.warn("it could not update this task");
+        assert invariant();
 
     }
 
@@ -75,11 +78,13 @@ public class Task extends Component{
     @Override
     protected void acceptVisitor(Visitor v) {
         assert v !=null: "error, visit task cannot be null";
+        assert invariant();
 
 
         v.visitTask(this);
 
         assert this !=null: "error visiting task";
+        assert invariant();
     }
     public List<Interval> getIntervalList() {
         return intervalList;
@@ -94,22 +99,26 @@ public class Task extends Component{
     public void addInterval(){
 
         assert this !=null: "error task " + this.getTagName() + "could not been started";
+        assert invariant();
         Interval startInterval= new Interval(this);
         intervalList.add(startInterval);
 
         assert intervalList.size()>0 : "error adding interval";
+        assert invariant();
     }
 
     /**
      * initialize the initial Date of the task and its parentProject.
      * */
     public void startTask(){
+        assert invariant();
         if(this.initialDate==null){
            setInitialDate(LocalDateTime.now());
            this.parentProject.updateInitialDate(LocalDateTime.now());
         }
         addInterval();
         log.info(this.tagName+" Starts");
+        assert invariant();
 
     }
 
@@ -118,15 +127,14 @@ public class Task extends Component{
      */
     public void stopTask(){
         assert intervalList.size()>0: "error, "+ "Task: "+this.getTagName()+ " has not been started";
+        assert invariant();
 
         Interval stop=intervalList.get(intervalList.size()-1);
         stop.stopInterval();
         log.info(this.tagName+ " Stops");
 
         assert this !=null: "error stopping task "+ this.getTagName();
-
-
-
+        assert invariant();
     }
 
 }

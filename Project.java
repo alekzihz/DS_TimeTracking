@@ -46,12 +46,14 @@ public class Project extends Component{
      * @param InitialDate the new initial date when a child task is started
      */
     public void updateInitialDate(LocalDateTime InitialDate){
+        assert invariant();
         if(this.initialDate==null){
             setInitialDate(InitialDate);
         }
         if(this.parentProject!=null){
             this.parentProject.updateInitialDate(initialDate);
         }
+        assert invariant();
 
     }
     /**
@@ -65,6 +67,7 @@ public class Project extends Component{
 
 
         assert clock!=null || newDuration!=null || newFinalDate!=null: "error updating datas";
+        assert invariant();
 
         Printer pi = new Printer(this);
         //si duracion es 0 set newduration
@@ -88,6 +91,8 @@ public class Project extends Component{
             }
 
         assert this!=null:"error, updating project";
+        log.warn("it could not update this project");
+        assert invariant();
 
     }
     /**
@@ -97,12 +102,14 @@ public class Project extends Component{
     protected void acceptVisitor(Visitor v) {
 
         assert v !=null: "error, visit project cannot be null";
+        assert invariant();
         v.visitProject(this);
         for(Component i :childrenProject){
             i.acceptVisitor(v);
         }
 
         assert this !=null: "error visiting project";
+        assert invariant();
 
     }
     public List<Component> getChildrenProject() {
@@ -116,8 +123,10 @@ public class Project extends Component{
      * initialize a new component and addd it to the childrenProject list
      * */
     protected void addComponent(Component component){
+        assert invariant();
         childrenProject.add(component);
         component.setParentProject(this);
+        assert invariant();
        //component.setTagParentProject(this.tagName);
 
     }

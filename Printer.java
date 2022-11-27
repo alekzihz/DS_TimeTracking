@@ -36,10 +36,11 @@ public class Printer implements Visitor, Observer {
     @Override
     public void visitProject(Project project) {
 
-
+            assert invariant();
             String formatString = String.format("Project : %15s %30s %30s %20s", project.getTagName(),(project.getInitialDate()).format(DATEFORMATTER),(project.getDateFinal()).format(DATEFORMATTER),
                     project.getDuration().toSeconds());
             log.info(formatString);
+        assert invariant();
 
     }
     /**
@@ -49,10 +50,11 @@ public class Printer implements Visitor, Observer {
     @Override
     public void visitTask(Task task) {
 
-
+            assert invariant();
             String formatString = String.format("activity: %15s %30s %30s %20s", task.getTagName(),task.getInitialDate().format(DATEFORMATTER),task.getDateFinal().format(DATEFORMATTER),
                     task.getDuration().toSeconds());
             log.info(formatString);
+        assert invariant();
     }
 
 
@@ -62,6 +64,7 @@ public class Printer implements Visitor, Observer {
      */
     @Override
     public void visitInterval(Interval interval) {
+        assert invariant();
 
         String formatString = String.format("Interval:   %44s %30s %20s", interval.getInitialDate().format(DATEFORMATTER),interval.getFinalDate().format(DATEFORMATTER),
                 interval.getDuration().toSeconds());
@@ -69,6 +72,7 @@ public class Printer implements Visitor, Observer {
 
 
        log.info(formatString);
+        assert invariant();
 
     }
     /**
