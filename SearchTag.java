@@ -4,12 +4,12 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchTag implements Visitor{
+public class SearchTag implements Visitor {
 
 
   private String searchTag;
 
-  private List<String> result = new ArrayList<>();
+  private final List<String> result = new ArrayList<>();
 
   private final Logger log = LoggerFactory.getLogger("SearchTag");
 
@@ -32,7 +32,7 @@ public class SearchTag implements Visitor{
     for (String t: task.getTag()){
       if (t.equalsIgnoreCase(searchTag)){
         result.add(task.getTagName());
-        //System.out.println("Activity: " + task.getTagName());
+
       }
     }
     if(task.getTagName().equals("transpotation")){
