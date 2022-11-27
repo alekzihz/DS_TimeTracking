@@ -93,8 +93,9 @@ package java.util{
 
 class Clock {
     -instanceClock: Clock
-    -seconds: int
+    -seconds: long
     -timer: Timer
+    -log: Logger
     -clock(seconds: int)
     +getInstanceClock(seconds: int):static synchronized :Clock
 
