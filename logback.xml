@@ -3,6 +3,7 @@
         <encoder>
             <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
+
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
@@ -15,16 +16,33 @@
     </appender>
 
     <!--Fita 1-->
-    <logger name="Component" level="warn"/>
-    <logger name="Task" level="warn"/>
-    <logger name="Project" level="warn"/>
-    <logger name="Interval" level="INFO"/>
-    <logger name="printer" level="warn"/>
+    <logger name="Component" level="off" additivity="false" >
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="Task" level="off" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="Project" level="off" additivity="false" >
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="Interval" level="off" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="printer" level="off" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
 
 
     <!--Fita 2-->
-    <logger name="SearchTag" level="INFO"/>
-
+    <logger name="SearchTag" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </logger>
 
 
 
@@ -33,7 +51,6 @@
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </root>
-
 
 
 </configuration>
