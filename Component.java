@@ -16,7 +16,7 @@ abstract class Component {
     protected Duration duration=Duration.ofSeconds(0);
     protected Project parentProject;
 
-    protected List<String> tag = new ArrayList<>();
+    protected final List<String> tag = new ArrayList<>();
     private final Logger log = LoggerFactory.getLogger("Component");
 
 
