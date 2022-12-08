@@ -14,17 +14,29 @@ import java.util.List;
 import static java.lang.System.exit;
 import static java.lang.Thread.sleep;
 
+
+//TODO: Solucioanr logger warn.
+
 public class Main {
     public static Project root = null;
     public static Project rootA = null;
-    public static void main(String[] args){
-        //apendiceA();
+    public static void main(String[] args) throws InterruptedException {
+        apendiceA();
+
+        rootA.findActivityById(11);
         //apendiceB();
 
-        testTag();
+        //testTag();
         //crearJSON();
         //readJson();
+        //apendiceA();
         exit(0);
+    }
+
+    public static Component makeTreeCourses(){
+        apendiceA();
+        return rootA;
+
     }
 
     private static void testTag() {
@@ -80,6 +92,9 @@ public class Main {
 
     }
 
+
+
+
     public static void apendiceA(){
         rootA = new Project("root");
         Project softwareDesign= new Project("software design",rootA);
@@ -103,6 +118,7 @@ public class Main {
         Problems.addComponent(secondList);
         timeTracker.addComponent(readHandout);
         timeTracker.addComponent(firstMilestone);
+
 
         SearchTag s = new SearchTag("java");
 
@@ -209,6 +225,7 @@ public class Main {
         root.setInitialDate(LocalDateTime.parse(object.getJSONObject("root").getString("InitialDate"), formatter));
         root.setDateFinal((LocalDateTime.parse(object.getJSONObject("root").getString("FinalDate"), formatter)));
         //root.setTagName(object.getJSONObject("root").getString("Name"));
+        root.setId(object.getJSONObject("root").getInt("id"));
 
         JSONArray children = object.getJSONObject("root").getJSONArray("children");
         List<Component> listChildren = new ArrayList<>();
@@ -342,6 +359,7 @@ public class Main {
         jo.put("InitialDate", root.getInitialDate().format(DATEFORMATTER));
         jo.put("FinalDate", root.getDateFinal().format(DATEFORMATTER));
         jo.put("Duration", root.getDuration().toSeconds());
+        jo.put("id", root.getId());
 
         if(root.getChildrenProject()!=null){
 
@@ -371,6 +389,8 @@ public class Main {
         itemChildren.put("InitialDate", (childrenComponent.getInitialDate()==null) ? "null" : childrenComponent.getInitialDate().format(DATEFORMATTER));
         itemChildren.put("FinalDate", (childrenComponent.getDateFinal()==null) ? "null" : childrenComponent.getDateFinal().format(DATEFORMATTER));
         itemChildren.put("Duration", childrenComponent.getDuration().toSeconds());
+        itemChildren.put("id", childrenComponent.getId());
+
 
         //childrenComponent.getChildrenProject();
         if(childrenComponent instanceof Task){
