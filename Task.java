@@ -18,15 +18,22 @@ public class Task extends Component{
 
     public Task(String tagName, Project parentProject){
         super(tagName,parentProject);
+        id = nextId.incrementAndGet();
         assert invariant();
         log.info("adding task "+tagName);
         log.debug("Adding Task "+ tagName + "to project " + this.parentProject.getTagName());
+        log.info("My id is: "+id+ "en tarea "+tagName);
+
 
     }
     public Task (String tagName){
         super(tagName);
+        id = nextId.incrementAndGet();
         assert invariant();
         log.info("adding task "+tagName);
+        log.info("My id is: "+id+ "en tarea "+tagName);
+
+
     }
 
 

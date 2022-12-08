@@ -22,11 +22,12 @@ public class Project extends Component{
 
 
         super(tagName);
+
+        id = nextId.incrementAndGet();
         //assert (tagName==null): "error it must have a name";
         assert invariant();
         log.info("Adding Project "+ tagName);
-
-
+        log.info("My id is: "+id+ "proyecto: "+tagName);
 
 
     }
@@ -35,9 +36,12 @@ public class Project extends Component{
 
 
         super(tagName,parentProject);
+        id = nextId.incrementAndGet();
         assert invariant();
         log.info("Adding Project "+ tagName);
         log.debug("Adding Project "+ tagName+ " to " + "Project "+parentProject.getTagName());
+        log.info("My id is: "+id+ "proyecto: "+tagName);
+
 
     }
 
