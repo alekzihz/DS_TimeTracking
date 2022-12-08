@@ -1,3 +1,7 @@
+package core;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.Duration;
@@ -22,7 +26,6 @@ public class Task extends Component{
         assert invariant();
         log.info("adding task "+tagName);
         log.debug("Adding Task "+ tagName + "to project " + this.parentProject.getTagName());
-        log.info("My id is: "+id+ "en tarea "+tagName);
 
 
     }
@@ -31,7 +34,6 @@ public class Task extends Component{
         id = nextId.incrementAndGet();
         assert invariant();
         log.info("adding task "+tagName);
-        log.info("My id is: "+id+ "en tarea "+tagName);
 
 
     }
@@ -71,7 +73,7 @@ public class Task extends Component{
         parentProject.updateDurationAndFinalDate(duration,clock, newFinalDate);
 
         assert this!=null:"error, updating task";
-        log.warn("it could not update this task");
+        //log.warn("it could not update this task");
         assert invariant();
 
     }
@@ -142,6 +144,25 @@ public class Task extends Component{
 
         assert this !=null: "error stopping task "+ this.getTagName();
         assert invariant();
+    }
+
+
+    public JSONObject toJson(int depth) {
+        // depth not used here
+        JSONObject json = new JSONObject();
+        json.put("class", "task");
+        super.toJson(json);
+        //json.put("active", active);
+        if (depth>0) {
+            JSONArray jsonIntervals = new JSONArray();
+            for (Interval interval : intervalList) {
+                jsonIntervals.put(interval.toJson());
+            }
+            json.put("intervals", jsonIntervals);
+        } else {
+            json.put("intervals", new JSONArray());
+        }
+        return json;
     }
 
 }

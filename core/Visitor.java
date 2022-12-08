@@ -1,3 +1,5 @@
+package core;
+
 /**
  * visitor interface that visit projects,tasks and intervals that provides a template printer/searchTag
  * */

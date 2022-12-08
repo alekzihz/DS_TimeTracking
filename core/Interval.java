@@ -1,8 +1,12 @@
+package core;
+
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Observable;
 import java.util.Observer;
 /**
@@ -92,5 +96,20 @@ public class Interval implements Observer {
     }
     public void stopInterval() {
         timer.deleteObserver(this);
+    }
+
+    public JSONObject toJson() {
+       final DateTimeFormatter formatter =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        JSONObject json = new JSONObject();
+        json.put("class", "interval");
+        //json.put("id", id);
+        json.put("initialDate", initialDate==null
+            ? JSONObject.NULL : formatter.format(initialDate));
+        json.put("finalDate", finalDate==null
+            ? JSONObject.NULL : formatter.format(finalDate));
+        json.put("duration", duration.toSeconds());
+        return json;
     }
 }

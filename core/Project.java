@@ -1,3 +1,7 @@
+package core;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +31,6 @@ public class Project extends Component{
         //assert (tagName==null): "error it must have a name";
         assert invariant();
         log.info("Adding Project "+ tagName);
-        log.info("My id is: "+id+ "proyecto: "+tagName);
 
 
     }
@@ -40,7 +43,6 @@ public class Project extends Component{
         assert invariant();
         log.info("Adding Project "+ tagName);
         log.debug("Adding Project "+ tagName+ " to " + "Project "+parentProject.getTagName());
-        log.info("My id is: "+id+ "proyecto: "+tagName);
 
 
     }
@@ -95,7 +97,7 @@ public class Project extends Component{
             }
 
         assert this!=null:"error, updating project";
-        log.warn("it could not update this project");
+        //log.warn("it could not update this project");
         assert invariant();
 
     }
@@ -142,8 +144,25 @@ public class Project extends Component{
         }
         return true;
 
+    }
 
-
+    public JSONObject toJson(int depth) {
+        JSONObject json = new JSONObject();
+        json.put("class", "project");
+        super.toJson(json);
+        if (depth>0) {
+            JSONArray jsonActivities = new JSONArray();
+            for (Component activity : childrenProject) {
+                if(activity instanceof Task){
+                    jsonActivities.put(((Task)activity).toJson(depth - 1));
+                }else {
+                    jsonActivities.put(((Project)activity).toJson(depth - 1));
+                }
+                // important: decrement depth
+            }
+            json.put("activities", jsonActivities);
+        }
+        return json;
     }
 
 

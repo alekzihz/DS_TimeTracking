@@ -1,3 +1,5 @@
+package core;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -15,25 +17,26 @@ import static java.lang.System.exit;
 import static java.lang.Thread.sleep;
 
 
-//TODO: Solucioanr logger warn.
+
+//TODO: Solucuonar logback configutarion.
 
 public class Main {
     public static Project root = null;
     public static Project rootA = null;
     public static void main(String[] args) throws InterruptedException {
-        apendiceA();
+        //apendiceA();
 
-        rootA.findActivityById(11);
-        //apendiceB();
+        //rootA.findActivityById(11);
+        apendiceB();
 
-        //testTag();
+       //testTag();
         //crearJSON();
         //readJson();
         //apendiceA();
         exit(0);
     }
 
-    public static Component makeTreeCourses(){
+    public static Project makeTreeCourses(){
         apendiceA();
         return rootA;
 
@@ -51,6 +54,8 @@ public class Main {
         Task secondList = new Task("second list", Problems);
         Task readHandout = new Task("read handout", timeTracker);
         Task firstMilestone = new Task("first milestone", timeTracker);
+
+
 
         rootA.addComponent(softwareDesign);
         rootA.addComponent(softwareTesting);

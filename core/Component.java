@@ -1,7 +1,11 @@
+package core;
+
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -10,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  *  class Component for saving task and projects
  */
-abstract class Component {
+public abstract class Component {
     protected LocalDateTime initialDate;
     protected LocalDateTime dateFinal;
     protected String tagName;
@@ -103,7 +107,7 @@ abstract class Component {
 
     protected abstract void acceptVisitor(Visitor v);
 
-    protected Component findActivityById(int id) {
+    public Component findActivityById(int id) {
         Component component;
 
         if (id == this.getId()) {
@@ -134,12 +138,25 @@ abstract class Component {
                 }
             }
         }
-
-
-
-
         return null;
     }
+
+    protected static final DateTimeFormatter formatter =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    protected void toJson(JSONObject json) {
+        json.put("id", id);
+        json.put("name", tagName);
+        json.put("initialDate", initialDate==null
+            ? JSONObject.NULL : formatter.format(initialDate));
+        json.put("finalDate", dateFinal==null
+            ? JSONObject.NULL : formatter.format(dateFinal));
+        json.put("duration", duration.toSeconds());
+    }
+
+
+
+
 
 
 
