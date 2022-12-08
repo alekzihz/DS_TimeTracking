@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -13,28 +14,40 @@ abstract class Component {
     protected LocalDateTime initialDate;
     protected LocalDateTime dateFinal;
     protected String tagName;
-    protected Duration duration=Duration.ofSeconds(0);
+    protected Duration duration = Duration.ofSeconds(0);
     protected Project parentProject;
 
     protected final List<String> tag = new ArrayList<>();
+
+    protected int id;
     private final Logger log = LoggerFactory.getLogger("Component");
+    protected static AtomicInteger nextId = new AtomicInteger();
 
 
     //protected String tagParentProject;
 
 
-    public Component(String tagName){
+    public Component(String tagName) {
         setTagName(tagName);
-        log.info("adding component "+tagName);
-        log.debug("Adding Component "+ tagName);
+        log.info("adding component " + tagName);
+        log.debug("Adding Component " + tagName);
+
 
     }
-    public Component(String tagName, Project parentProject){
+
+    public Component(String tagName, Project parentProject) {
         setTagName(tagName);
         setParentProject(parentProject);
-        log.debug("Adding Component "+ tagName + " to " + parentProject.getTagName());
+        log.debug("Adding Component " + tagName + " to " + parentProject.getTagName());
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTagName() {
         return tagName;
@@ -88,6 +101,48 @@ abstract class Component {
         return tag;
     }
 
-    protected  abstract void acceptVisitor(Visitor v);
+    protected abstract void acceptVisitor(Visitor v);
+
+    protected Component findActivityById(int id) {
+        Component component;
+
+        if (id == this.getId()) {
+            System.out.println("Componente encontrado"+ this.getTagName());
+            return this;
+        } else {
+
+            if (this instanceof Project) {
+                if (((Project) this).getChildrenProject() != null) {
+                    //function recursive.
+                    component=componentByID(id, (Project)this );
+                }
+            }
+        }
+        return null;
+    }
+
+    public Component componentByID(int id, Project component){
+        for(Component i: component.getChildrenProject()){
+            if(id==i.getId()){
+                System.out.println("Componente encontrado"+ i.getTagName());
+                return i;
+            }else{
+                if(i instanceof Project){
+                    if(((Project) i).getChildrenProject()!=null){
+                        componentByID(id, (Project)i );
+                    }
+                }
+            }
+        }
+
+
+
+
+        return null;
+    }
+
+
 
 }
+
+
