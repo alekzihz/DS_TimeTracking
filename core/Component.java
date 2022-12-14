@@ -108,11 +108,11 @@ public abstract class Component {
     protected abstract void acceptVisitor(Visitor v);
 
     public Component findActivityById(int id) {
-        Component component;
+        Component component =null;
 
         if (id == this.getId()) {
-            System.out.println("Componente encontrado"+ this.getTagName());
             return this;
+
         } else {
 
             if (this instanceof Project) {
@@ -122,7 +122,7 @@ public abstract class Component {
                 }
             }
         }
-        return null;
+        return component;
     }
 
     public Component componentByID(int id, Project component){
