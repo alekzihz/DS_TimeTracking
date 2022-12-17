@@ -114,9 +114,19 @@ public class WebServer {
       switch (tokens[0]) {
         case "get_tree" : {
           int id = Integer.parseInt(tokens[1]);
+
+          ///System.out.println("mi id:" + id);
           Component activity = findActivityById(id);
+
+          System.out.println(activity.getTagName());
           assert (activity!=null);
-          body = ((Project)activity).toJson(1).toString();
+
+          if(activity instanceof Project){
+            body = ((Project)activity).toJson(1).toString();
+          }
+          else{
+            body = ((Task)activity).toJson(1).toString();
+          }
           break;
 
           //TODO:Chequiar esto
@@ -124,6 +134,7 @@ public class WebServer {
         case "start": {
           int id = Integer.parseInt(tokens[1]);
           Component activity = findActivityById(id);
+          System.out.println("mi task"+activity.getTagName());
           assert (activity!=null);
           Task task = (Task) activity;
           task.startTask();
