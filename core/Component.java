@@ -25,7 +25,7 @@ public abstract class Component {
 
     protected int id;
     private final Logger log = LoggerFactory.getLogger("Component");
-    protected static AtomicInteger nextId = new AtomicInteger();
+    protected static AtomicInteger nextId = new AtomicInteger(-1);
 
 
     //protected String tagParentProject;
