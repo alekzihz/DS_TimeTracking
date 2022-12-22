@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:practica_ds_timetracking/tree.dart' hide getTree;
 import 'package:practica_ds_timetracking/PageIntervals.dart';
 import 'package:practica_ds_timetracking/requests.dart';
+import 'dart:async';
 
 
 
@@ -16,13 +17,19 @@ class _PageActivitiesState extends State<PageActivities> {
   late int id;
   late Future<Tree> futureTree;
 
+
+  late Timer _timer;
+  static const int periodeRefresh = 6;
+
+
+
   @override
   void initState() {
     super.initState();
     id = widget.id;
     futureTree = getTree(id);
+    _activateTimer();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +44,7 @@ class _PageActivitiesState extends State<PageActivities> {
               title: Text(snapshot.data!.root.name), // updated 16-dec-2022
               actions: <Widget>[
                 IconButton(icon: Icon(Icons.home),
-                    onPressed: () {
-                      while(Navigator.of(context).canPop()) {
-                        print("pop");
-                        Navigator.of(context).pop();
-                      }
-                      /* this works also:
-                        Navigator.popUntil(context, ModalRoute.withName('/'));
-                      */
-                      PageActivities(1);
-                    } // TODO go home page = root
+                    onPressed: () {} // TODO go home page = root
                 ),
                 //TODO other actions
               ],
@@ -54,30 +52,33 @@ class _PageActivitiesState extends State<PageActivities> {
             body: ListView.separated(
               // it's like ListView.builder() but better because it includes a separator between items
               padding: const EdgeInsets.all(16.0),
-              itemCount: snapshot.data!.root.children.length,
-              // updated 16-dec-2022
+              itemCount: snapshot.data!.root.children.length, // updated 16-dec-2022
               itemBuilder: (BuildContext context, int index) =>
-                  _buildRow(snapshot.data!.root.children[index], index),
-              // updated 16-dec-2022
+                  _buildRow(snapshot.data!.root.children[index], index), // updated 16-dec-2022
               separatorBuilder: (BuildContext context, int index) =>
               const Divider(),
             ),
           );
         } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
+          return Text("nooo ${snapshot.error}");
         }
         // By default, show a progress indicator
         return Container(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height,
+            height: MediaQuery.of(context).size.height,
             color: Colors.white,
             child: Center(
               child: CircularProgressIndicator(),
             ));
       },
     );
+  }
+
+  @override
+  void dispose() {
+    // "The framework calls this method when this State object will never build again"
+    // therefore when going up
+    _timer.cancel();
+    super.dispose();
   }
 
   Widget _buildRow(Activity activity, int index) {
@@ -99,7 +100,15 @@ class _PageActivitiesState extends State<PageActivities> {
         title: Text('${activity.name}'),
         trailing: trailing,
         onTap: () => _navigateDownIntervals(activity.id),
-        onLongPress: () {}, // TODO start/stop counting the time for tis task
+        onLongPress: () {
+          if ((activity as Task).active) {
+            stop(activity.id);
+            _refresh();
+          } else {
+            start(activity.id);
+            _refresh();
+          }
+        }, // TODO start/stop counting the time for tis task
       );
     }
 
@@ -122,14 +131,35 @@ class _PageActivitiesState extends State<PageActivities> {
     Navigator.of(context)
         .push(MaterialPageRoute<void>(
       builder: (context) => PageActivities(childId),
-    ));
+    )).then((var value) {
+      _activateTimer();
+      _refresh();
+
+    });
   }
 
   void _navigateDownIntervals(int childId) {
     Navigator.of(context)
         .push(MaterialPageRoute<void>(
       builder: (context) => PageIntervals(childId),
-    ));
+    )).then((var value) {
+      _activateTimer();
+      _refresh();
+    });
+  }
+
+
+  void _refresh() async {
+    futureTree = getTree(id); // to be used in build()
+    setState(() {});
+  }
+
+
+  void _activateTimer() {
+    _timer = Timer.periodic(Duration(seconds: periodeRefresh), (Timer t) {
+      futureTree = getTree(id);
+      setState(() {});
+    });
   }
 }
 

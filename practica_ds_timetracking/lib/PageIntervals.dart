@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:practica_ds_timetracking/page_activities.dart';
 import 'package:practica_ds_timetracking/tree.dart' as Tree hide getTree;
 import 'package:practica_ds_timetracking/requests.dart';
 
@@ -43,7 +44,7 @@ class _PageIntervalsState extends State<PageIntervals> {
                     /* this works also:
                         Navigator.popUntil(context, ModalRoute.withName('/'));
                       */
-                    PageIntervals(1);
+                    PageActivities(0);
 
                   }, // TODO
                 )
