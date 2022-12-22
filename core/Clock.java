@@ -33,7 +33,7 @@ public class Clock extends Observable {
     /**
      * Implementation of Singleton
      */
-    public static synchronized Clock getInstanceClock(int seconds){
+    public static synchronized Clock getInstanceClock(long seconds){
         if(instanceClock ==null){
             instanceClock =new Clock(seconds);
         }
@@ -58,6 +58,7 @@ public class Clock extends Observable {
 
         @Override
         public void run() {
+
             //System.out.println(LocalDateTime.now());
             instanceClock.setChanged();
             instanceClock.notifyObservers(this);
