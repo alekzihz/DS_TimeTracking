@@ -165,5 +165,24 @@ public class Project extends Component{
         return json;
     }
 
+    @Override
+    public Component findActivityById(int id) {
+        final List<Component> components = this.getChildrenProject();
+
+        if(id == this.getId()){
+            return this;
+        }else{
+            for(Component i : components){
+                Component c= i.findActivityById(id);
+
+
+                if(c !=null){
+                    return c;
+                }
+            }
+        }
+        return null;
+    }
+
 
 }

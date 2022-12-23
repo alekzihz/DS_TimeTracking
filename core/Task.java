@@ -165,4 +165,11 @@ public class Task extends Component{
         return json;
     }
 
+    public Component findActivityById(int id) {
+        if(id == this.getId()){
+            return this;
+        }
+        return null;
+    }
+
 }

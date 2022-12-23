@@ -107,39 +107,7 @@ public abstract class Component {
 
     protected abstract void acceptVisitor(Visitor v);
 
-    public Component findActivityById(int id) {
-        Component component =null;
-
-        if (id == this.getId()) {
-            return this;
-
-        } else {
-
-            if (this instanceof Project) {
-                if (((Project) this).getChildrenProject() != null) {
-                    //function recursive.
-                    component=componentByID(id, (Project)this );
-                }
-            }
-        }
-        return component;
-    }
-
-    public Component componentByID(int id, Project component){
-        for(Component i: component.getChildrenProject()){
-            if(id==i.getId()){
-                System.out.println("Componente encontrado"+ i.getTagName());
-                return i;
-            }else{
-                if(i instanceof Project){
-                    if(((Project) i).getChildrenProject()!=null){
-                        componentByID(id, (Project)i );
-                    }
-                }
-            }
-        }
-        return null;
-    }
+    public abstract Component findActivityById(int id);
 
     protected static final DateTimeFormatter formatter =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
