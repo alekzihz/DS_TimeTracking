@@ -7,19 +7,18 @@ import 'dart:async';
 
 
 class PageActivities extends StatefulWidget {
-  int id;
+  late int id;
   PageActivities(this.id);
   @override
   _PageActivitiesState createState() => _PageActivitiesState();
 }
 
 class _PageActivitiesState extends State<PageActivities> {
-  late int id;
+  late int  id;
   late Future<Tree> futureTree;
 
-
-  late Timer _timer;
-  static const int periodeRefresh = 6;
+  late Timer  _timer;
+  static const int  periodeRefresh = 6;
 
 
 
@@ -28,7 +27,7 @@ class _PageActivitiesState extends State<PageActivities> {
     super.initState();
     id = widget.id;
     futureTree = getTree(id);
-    _activateTimer();
+    //_activateTimer();
   }
 
   @override
@@ -54,13 +53,15 @@ class _PageActivitiesState extends State<PageActivities> {
               padding: const EdgeInsets.all(16.0),
               itemCount: snapshot.data!.root.children.length, // updated 16-dec-2022
               itemBuilder: (BuildContext context, int index) =>
+
+                  //activity, index
                   _buildRow(snapshot.data!.root.children[index], index), // updated 16-dec-2022
               separatorBuilder: (BuildContext context, int index) =>
               const Divider(),
             ),
           );
         } else if (snapshot.hasError) {
-          return Text("nooo ${snapshot.error}");
+          return Text("${snapshot.error}");
         }
         // By default, show a progress indicator
         return Container(
@@ -84,13 +85,17 @@ class _PageActivitiesState extends State<PageActivities> {
   Widget _buildRow(Activity activity, int index) {
     String strDuration = Duration(seconds: activity.duration).toString().split('.').first;
     // split by '.' and taking first element of resulting list removes the microseconds part
+    print("entrando a buildow");
     if (activity is Project) {
+
       return ListTile(
         title: Text('${activity.name}'),
         trailing: Text('$strDuration'),
         onTap: () => _navigateDownActivities(activity.id),
       );
-    } else if (activity is Task) {
+    } else {
+
+
       Task task = activity as Task;
       // at the moment is the same, maybe changes in the future
       Widget trailing;
@@ -112,19 +117,7 @@ class _PageActivitiesState extends State<PageActivities> {
       );
     }
 
-    else {
-      Task task = activity as Task;
-      Widget trailing;
-      trailing = Text('$strDuration');
-      return ListTile(
-        title: Text('${activity.name}'),
-        trailing: trailing,
-        onTap: () => {},
-        // TODO, navigate down to show intervals
-        onLongPress: () {},
-        // TODO start/stop counting the time for this task
-      );
-    }
+
   }
 
   void _navigateDownActivities(int childId) {
@@ -132,8 +125,8 @@ class _PageActivitiesState extends State<PageActivities> {
         .push(MaterialPageRoute<void>(
       builder: (context) => PageActivities(childId),
     )).then((var value) {
-      _activateTimer();
-      _refresh();
+      //_activateTimer();
+      //_refresh();
 
     });
   }
@@ -143,13 +136,15 @@ class _PageActivitiesState extends State<PageActivities> {
         .push(MaterialPageRoute<void>(
       builder: (context) => PageIntervals(childId),
     )).then((var value) {
-      _activateTimer();
-      _refresh();
+      //_activateTimer();
+      //_refresh();
     });
   }
 
 
   void _refresh() async {
+
+
     futureTree = getTree(id); // to be used in build()
     setState(() {});
   }
