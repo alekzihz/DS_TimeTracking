@@ -20,7 +20,10 @@ public class Task extends Component{
     protected List<Interval> intervalList=new ArrayList<>();
     private final Logger log = LoggerFactory.getLogger("Task");
 
+    private Boolean active=false;
+
     public Task(String tagName, Project parentProject){
+
         super(tagName,parentProject);
         id = nextId.incrementAndGet();
         assert invariant();
@@ -30,9 +33,12 @@ public class Task extends Component{
 
     }
     public Task (String tagName){
+
         super(tagName);
         id = nextId.incrementAndGet();
+
         assert invariant();
+        log.info("estoy en active"+this.active);
         log.info("adding task "+tagName);
 
 
@@ -103,8 +109,8 @@ public class Task extends Component{
     }
 
     /**
-    * initialize a new interval and addes it to the arraylist "intervalList"
-    * */
+     * initialize a new interval and addes it to the arraylist "intervalList"
+     * */
     public void addInterval(){
 
         assert this !=null: "error task " + this.getTagName() + "could not been started";
@@ -122,11 +128,12 @@ public class Task extends Component{
     public void startTask(){
         assert invariant();
         if(this.initialDate==null){
-           setInitialDate(LocalDateTime.now());
-           this.parentProject.updateInitialDate(LocalDateTime.now());
+            setInitialDate(LocalDateTime.now());
+            this.parentProject.updateInitialDate(LocalDateTime.now());
         }
         addInterval();
         log.info(this.tagName+" Starts");
+        this.active=true;
         assert invariant();
 
     }
@@ -152,7 +159,9 @@ public class Task extends Component{
         JSONObject json = new JSONObject();
         json.put("class", "task");
         super.toJson(json);
-        //json.put("active", active);
+        json.put("active", active);
+
+
         if (depth>0) {
             JSONArray jsonIntervals = new JSONArray();
             for (Interval interval : intervalList) {
@@ -165,7 +174,10 @@ public class Task extends Component{
         return json;
     }
 
+    @Override
     public Component findActivityById(int id) {
+        //final List<Component> components = this.getChildrenProject();
+
         if(id == this.getId()){
             return this;
         }
