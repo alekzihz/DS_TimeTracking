@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:practica_ds_timetracking/tree.dart' hide getTree;
 import 'package:practica_ds_timetracking/PageIntervals.dart';
 import 'package:practica_ds_timetracking/requests.dart';
+import 'package:practica_ds_timetracking/PageNewActivity.dart';
+
 import 'dart:async';
 
 
@@ -16,7 +18,6 @@ class PageActivities extends StatefulWidget {
 class _PageActivitiesState extends State<PageActivities> {
   late int  id;
   late Future<Tree> futureTree;
-
   late Timer  _timer;
   static const int  periodeRefresh = 6;
 
@@ -43,7 +44,9 @@ class _PageActivitiesState extends State<PageActivities> {
               title: Text(snapshot.data!.root.name), // updated 16-dec-2022
               actions: <Widget>[
                 IconButton(icon: Icon(Icons.home),
-                    onPressed: () {} // TODO go home page = root
+                    onPressed: () {
+
+                    } // TODO go home page = root
                 ),
                 //TODO other actions
               ],
@@ -59,7 +62,19 @@ class _PageActivitiesState extends State<PageActivities> {
               separatorBuilder: (BuildContext context, int index) =>
               const Divider(),
             ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute<void>(
+                  builder: (context) => PageNewActivity(),
+                ));
+              },
+              backgroundColor: Colors.green,
+              child: const Icon(Icons.more_time),
+            ),
           );
+
+
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
@@ -85,7 +100,7 @@ class _PageActivitiesState extends State<PageActivities> {
   Widget _buildRow(Activity activity, int index) {
     String strDuration = Duration(seconds: activity.duration).toString().split('.').first;
     // split by '.' and taking first element of resulting list removes the microseconds part
-    print("entrando a buildow");
+
     if (activity is Project) {
 
       return ListTile(
@@ -116,6 +131,7 @@ class _PageActivitiesState extends State<PageActivities> {
         }, // TODO start/stop counting the time for tis task
       );
     }
+
 
 
   }
