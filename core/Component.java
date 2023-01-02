@@ -121,13 +121,6 @@ public abstract class Component {
             ? JSONObject.NULL : formatter.format(dateFinal));
         json.put("duration", duration.toSeconds());
     }
-
-
-
-
-
-
-
 }
 
 
