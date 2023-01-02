@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:practica_ds_timetracking/page_activities.dart';
 import 'package:practica_ds_timetracking/tree.dart' as Tree hide getTree;
 import 'package:practica_ds_timetracking/requests.dart';
 
 class PageIntervals extends StatefulWidget {
-  int id;
+  late int id;
   PageIntervals(this.id);
   @override
   _PageIntervalsState createState() => _PageIntervalsState();
@@ -14,12 +16,16 @@ class _PageIntervalsState extends State<PageIntervals> {
 
   late int id;
   late Future<Tree.Tree> futureTree;
+  late Timer _timer;
+  static const int  periodeRefresh = 6;
+
 
   @override
   void initState() {
     super.initState();
     id = widget.id;
     futureTree = getTree(id);
+    _activateTimer();
     // the root is a task and the children its intervals
   }
   @override
@@ -84,4 +90,22 @@ class _PageIntervalsState extends State<PageIntervals> {
       trailing: Text('$strDuration'),
     );
   }
+
+
+  @override
+  void dispose() {
+    // "The framework calls this method when this State object will never build again"
+    // therefore when going up
+    _timer.cancel();
+    super.dispose();
+  }
+
+  void _activateTimer() {
+    _timer = Timer.periodic(Duration(seconds: periodeRefresh), (Timer t) {
+      futureTree = getTree(id);
+      setState(() {});
+    });
+  }
+
+
 }
