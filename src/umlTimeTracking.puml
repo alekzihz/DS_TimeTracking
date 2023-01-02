@@ -3,7 +3,7 @@
 'https://plantuml.com/class-diagram
 
 
-
+package core{
 class main{
   main(String[] args):void
   -testTag():void
@@ -17,6 +17,7 @@ class main{
   +writeTreeJson(Project): JSONObject
   +writeChildrenRoot(Component): JSONObject
   -writeIntervalTask(Interval): JSONObject
+  +{static}makeTreeCourses():Project
 }
 abstract Component{
     {abstract}#initialDate: LocalDateTime
@@ -24,8 +25,13 @@ abstract Component{
     {abstract}#tagName: String
     {abstract}#duration: LocalDateTime
     {abstract}#parentProject: Project
+    {abstract}#id:int
+    #{static}nextId:AtomicInteger
+    -log: Logger
+    {abstract}+findActivityById(id:int):Component
     {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
     {abstract}-acceptVisitor(v: Visitor): void
+    #toJson(json:JSONObject):
 }
 
 Interface Visitor{
@@ -38,24 +44,28 @@ Interface Visitor{
 class Project{
     -childrenProject:List <component>: arrayList
     -log: Logger
-    
+
     -invariant(): boolean
     +updateInitialDate(newFinalDate: LocalDateTime): void
     {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
     #addComponent(component: Component):void
     #acceptVisitor(v: Visitor):void
+    {abstract}+findActivityById(id:int):Component
+     #toJson(depth:int):JSONObject
 }
 
 class Task {
     -intervalList:List <interval>
     -log: Logger
-    
+    -active:Boolean
     -invariant(): boolean
     {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
     {abstract}-acceptVisitor(v: Visitor): void
     +addInterval(): void
     +startTask(): void
     +stopTask(): void
+    {abstract}+findActivityById(id:int):Component
+    #toJson(depth:int):JSONObject
 }
 class interval{
     -task: Task
@@ -64,11 +74,33 @@ class interval{
     -Duration:Duration
     -clock: Clock
     -log: Logger
-    
+
     -invariant(): boolean
     {abstract}-acceptVisitor(v: Visitor): void
     {abstract}-update(ob: Observable, arg: Object): void
     +stopInterval(): void
+
+}
+
+class Printer{
+    -log: Logger
+
+    -invariant(): Boolean
+    +visitTask(task: Task): void
+    +visitProject(project: Project): void
+    +visitInterval( interval: Interval): void
+
+    +{abstract}update(arg0: Observable, arg1: Object)
+}
+
+
+class SearchTag {
+    -searchTag: String
+    -result: List<String>
+    -log: Logger
+
+
+    -invariant(): boolean
 
 }
 
@@ -90,6 +122,11 @@ package java.util{
 
 
 }
+class NotifyTask{
+    {abstract}run():void
+}
+
+class TimerTask{}
 
 class Clock {
     -instanceClock: Clock
@@ -100,36 +137,6 @@ class Clock {
     +getInstanceClock(seconds: int):static synchronized :Clock
 
 }
-
-class NotifyTask{
-    {abstract}run():void
-}
-
-class Printer{
-    -log: Logger
-
-    -invariant(): Boolean
-    +visitTask(task: Task): void
-    +visitProject(project: Project): void
-    +visitInterval( interval: Interval): void
-
-    +{abstract}update(arg0: Observable, arg1: Object)
-}
-
-
-class SearchTag {
-    -searchTag: String
-    -result: List<String>
-    -log: Logger
-    
-    
-    -invariant(): boolean
-
-}
-
-Clock-left->NotifyTask
-NotifyTask--|>Observable
-NotifyTask-left-|>TimerTask
 
 SearchTag..|>Visitor
 
@@ -145,5 +152,51 @@ Clock--|> Observable
 interval ..|> Observer
 Observable*--left>"*"Observer:observers
 Task "1..n"*--> interval:interval
+
+}
+
+
+
+Clock-left->NotifyTask
+NotifyTask--|>Observable
+NotifyTask-left-|>TimerTask
+
+
+package webServer{
+
+    class mainWebServer{
+        +{static} main(String[] args):void
+        +{static} webServer:void;
+
+    }
+
+    class WebServer{
+        -currentActivity:Project
+        -root:Project:final
+        +webServer(root:Project)
+        -findActivityById:component(id:int)
+
+    }
+
+    class socketThread{
+        -final insocked:Socket
+        -makeBodyAnswer:string(tokens:String[])
+        -makeHeaderAnswer:string()
+        +run:void()
+
+    }
+
+mainWebServer"1..1"-right-> WebServer
+socketThread<-up- WebServer
+socketThread--|>Thread
+
+
+
+
+}
+
+webServer-->core
+
+
 
 @enduml
