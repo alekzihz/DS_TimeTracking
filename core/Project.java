@@ -128,7 +128,7 @@ public class Project extends Component{
     /**
      * initialize a new component and addd it to the childrenProject list
      * */
-    protected void addComponent(Component component){
+    public void addComponent(Component component){
         assert invariant();
         childrenProject.add(component);
         component.setParentProject(this);
