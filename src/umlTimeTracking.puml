@@ -48,7 +48,7 @@ class Project{
     -invariant(): boolean
     +updateInitialDate(newFinalDate: LocalDateTime): void
     {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
-    #addComponent(component: Component):void
+    +addComponent(component: Component):void
     #acceptVisitor(v: Visitor):void
     {abstract}+findActivityById(id:int):Component
      #toJson(depth:int):JSONObject
