@@ -9,9 +9,9 @@ List<String> list_activity = <String>['Proyecto','Tarea'];
 
 
 class PageNewActivity extends StatefulWidget {
-  late String parentActivity;
-  PageNewActivity(String parentActivity){
-    this.parentActivity=parentActivity;
+  late int idParentActivity;
+  PageNewActivity(int idParentActivity){
+    this.idParentActivity=idParentActivity;
 
   }
 
@@ -22,12 +22,8 @@ class PageNewActivity extends StatefulWidget {
 
 class _PageNewActivityState extends State<PageNewActivity> {
 
-
-
-
-
   String firstElementContent = list_activity.first;
-  late String parent = widget.parentActivity;
+  late int idParent = widget.idParentActivity;
   late String nameActivity;
   late String tag;
   int typeActivity=0;
@@ -112,7 +108,12 @@ class _PageNewActivityState extends State<PageNewActivity> {
                 ),
                 onPressed: () {
 
-                    addActivity(nameActivity, tag, typeActivity, parent);
+                    addActivity(nameActivity, tag, typeActivity,idParent);
+                    Navigator.of(context)
+                        .push(MaterialPageRoute<void>(
+                      builder: (context) => PageActivities(idParent),
+                    ));
+
 
                     //_showMyDialog();
                 },

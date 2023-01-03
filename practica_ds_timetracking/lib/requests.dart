@@ -68,15 +68,16 @@ Future<void> stop(int id) async {
   }
 }
 
-Future<void> addActivity(String nameActivity, String tag, int typeActivity, String parent) async {
-  String uri = "$baseUrl/add_activity?name=$nameActivity&tag=$tag&type=$typeActivity&parent=$parent";
-
+Future<void> addActivity(String nameActivity, String tag, int typeActivity, int idParent) async {
+  String uri = "$baseUrl/add_activity?$nameActivity&$tag&$typeActivity&$idParent";
 
 
   var url =  Uri.parse(uri);
   final response = await client.get(url);
   if (response.statusCode == 200) {
     print("statusCode=$response.statusCode");
+
+    //getTree(idParent);
 
   } else {
     print("statusCode=$response.statusCode");

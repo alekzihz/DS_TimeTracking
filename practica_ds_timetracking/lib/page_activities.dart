@@ -40,33 +40,60 @@ class _PageActivitiesState extends State<PageActivities> {
         // anonymous function
         if (snapshot.hasData) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text(snapshot.data!.root.name), // updated 16-dec-2022
+            appBar: snapshot.data!.root.name=="root"? AppBar(
+              title: Text("Proyectos Principales"), // updated 16-dec-2022
               actions: <Widget>[
                 IconButton(icon: Icon(Icons.home),
                     onPressed: () {
+                      while(Navigator.of(context).canPop()) {
+                        print("pop");
+                        Navigator.of(context).pop();
+                      }
+
+                    } // TODO go home page = root
+                ),
+                //TODO other actions
+              ],
+
+            ) :AppBar(
+              title: Text(snapshot.data!.root.name), // updated 16-dec-2022
+
+              actions: <Widget>[
+                IconButton(icon: Icon(Icons.home),
+                    onPressed: () {
+                      while(Navigator.of(context).canPop()) {
+                        print("pop");
+                        Navigator.of(context).pop();
+                      }
 
                     } // TODO go home page = root
                 ),
                 //TODO other actions
               ],
             ),
-            body: ListView.separated(
-              // it's like ListView.builder() but better because it includes a separator between items
-              padding: const EdgeInsets.all(16.0),
-              itemCount: snapshot.data!.root.children.length, // updated 16-dec-2022
-              itemBuilder: (BuildContext context, int index) =>
+            body:
+            Scrollbar(
+              child: ListView.separated(
+                // it's like ListView.builder() but better because it includes a separator between items
 
-                  //activity, index
-                  _buildRow(snapshot.data!.root.children[index], index), // updated 16-dec-2022
-              separatorBuilder: (BuildContext context, int index) =>
-              const Divider(),
+                //itemCount:10,
+                padding: const EdgeInsets.all(16.0),
+                itemCount: snapshot.data!.root.children.length, // updated 16-dec-2022
+                itemBuilder: (BuildContext context, int index) =>
+                //activity, index
+                _buildRow(snapshot.data!.root.children[index], index), // updated 16-dec-2022
+                separatorBuilder: (BuildContext context, int index) =>
+                const Divider(),
+              ),
+
             ),
+
+
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute<void>(
-                  builder: (context) => PageNewActivity(snapshot.data!.root.name),
+                  builder: (context) => PageNewActivity(this.id),
                 ));
               },
               backgroundColor: Colors.green,
@@ -102,9 +129,9 @@ class _PageActivitiesState extends State<PageActivities> {
     // split by '.' and taking first element of resulting list removes the microseconds part
 
     if (activity is Project) {
-
       return ListTile(
         title: Text('${activity.name}'),
+        subtitle: Text('Proyecto'),
         trailing: Text('$strDuration'),
         onTap: () => _navigateDownActivities(activity.id),
       );
@@ -114,11 +141,23 @@ class _PageActivitiesState extends State<PageActivities> {
       Task task = activity as Task;
       // at the moment is the same, maybe changes in the future
       Widget trailing;
-      trailing = Text('$strDuration');
+      Widget trailingButton;
+      //trailing = Text('$strDuration');
+      //trailingButton = Icon(Icons.not_started_outlined);
 
       return ListTile(
         title: Text('${activity.name}'),
-        trailing: trailing,
+        subtitle: Text('Tarea'),
+        trailing: Wrap(
+          spacing: 50,
+          children: <Widget>[
+            Icon(Icons.not_started_outlined),
+            Text('$strDuration'),
+
+          ],
+
+        ),
+
         onTap: () => _navigateDownIntervals(activity.id),
         onLongPress: () {
           if ((activity as Task).active) {
