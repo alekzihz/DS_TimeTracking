@@ -22,6 +22,7 @@ const String baseUrl = "http://10.0.2.2:8080";
 Future<Tree> getTree(int id) async {
   String uri = "$baseUrl/get_tree?$id";
   var url =  Uri.parse(uri);
+  print ("mi url ${uri}");
   final response = await client.get(url);
 
 
@@ -61,6 +62,22 @@ Future<void> stop(int id) async {
   final response = await client.get(url);
   if (response.statusCode == 200) {
     print("statusCode=$response.statusCode");
+  } else {
+    print("statusCode=$response.statusCode");
+    throw Exception('Failed to get children');
+  }
+}
+
+Future<void> addActivity(String nameActivity, String tag, int typeActivity, String parent) async {
+  String uri = "$baseUrl/add_activity?name=$nameActivity&tag=$tag&type=$typeActivity&parent=$parent";
+
+
+
+  var url =  Uri.parse(uri);
+  final response = await client.get(url);
+  if (response.statusCode == 200) {
+    print("statusCode=$response.statusCode");
+
   } else {
     print("statusCode=$response.statusCode");
     throw Exception('Failed to get children');

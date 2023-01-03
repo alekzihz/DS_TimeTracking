@@ -1,18 +1,22 @@
 // see Serializing JSON inside model classes in
 // https://flutter.dev/docs/development/data-and-backend/json
 
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert' as convert;
 
 final DateFormat _dateFormatter = DateFormat("yyyy-MM-dd HH:mm:ss");
 
 abstract class Activity {
+
+
   late int id;
   late String name;
   DateTime? initialDate;
   DateTime? finalDate;
   late int duration;
   List<dynamic> children = List<dynamic>.empty(growable: true);
+
 
   Activity.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -24,15 +28,17 @@ abstract class Activity {
 
 
 class Project extends Activity {
+
   Project.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
     if (json.containsKey('activities')) {
       // json has only 1 level because depth=1 or 0 in time_tracker
       for (Map<String, dynamic> jsonChild in json['activities']) {
         if (jsonChild['class'] == "project") {
-          children.add(Project.fromJson(jsonChild));
+          children?.add(Project.fromJson(jsonChild));
           // condition on key avoids infinite recursion
         } else if (jsonChild['class'] == "task") {
-          children.add(Task.fromJson(jsonChild));
+
+          children?.add(Task.fromJson(jsonChild));
         } else {
           assert(false);
         }
@@ -45,9 +51,12 @@ class Project extends Activity {
 class Task extends Activity {
   late bool active;
   Task.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
+    //TODO: Problema que task no tenia el atributo de active por eso
+    //TODO:daba error y no mostraba en el flutter.
+
     active = json['active'];
     for (Map<String, dynamic> jsonChild in json['intervals']) {
-      children.add(Interval.fromJson(jsonChild));
+      children?.add(Interval.fromJson(jsonChild));
     }
   }
 }
@@ -73,9 +82,13 @@ class Tree {
   late Activity root;
 
   Tree(Map<String, dynamic> dec) {
+
+
+
     // 1 level tree, root and children only, root is either Project or Task. If Project
     // children are Project or Task, that is, Activity. If root is Task, children are Interval.
-    assert (dec['class'] == "project" || dec['class']=='task');
+    assert (dec['class'] == "project" || dec['class']=="task");
+    //print("esto. $dec['class']");
     if (dec['class'] == "project") {
       root = Project.fromJson(dec);
     } else {

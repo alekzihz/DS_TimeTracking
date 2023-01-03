@@ -66,7 +66,7 @@ class _PageActivitiesState extends State<PageActivities> {
               onPressed: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute<void>(
-                  builder: (context) => PageNewActivity(),
+                  builder: (context) => PageNewActivity(snapshot.data!.root.name),
                 ));
               },
               backgroundColor: Colors.green,

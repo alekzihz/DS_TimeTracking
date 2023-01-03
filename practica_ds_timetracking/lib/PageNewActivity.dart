@@ -4,11 +4,17 @@ import 'package:practica_ds_timetracking/tree.dart' as Tree hide getTree;
 import 'package:practica_ds_timetracking/requests.dart';
 
 
-List<String> list_period = <String>['Today','Yesterday','Last week', 'This week','Other'];
+
 List<String> list_activity = <String>['Proyecto','Tarea'];
-List<String> list_format = <String>['Web page','PDF','Text'];
+
 
 class PageNewActivity extends StatefulWidget {
+  late String parentActivity;
+  PageNewActivity(String parentActivity){
+    this.parentActivity=parentActivity;
+
+  }
+
 
   @override
   State<PageNewActivity> createState() => _PageNewActivityState();
@@ -16,11 +22,15 @@ class PageNewActivity extends StatefulWidget {
 
 class _PageNewActivityState extends State<PageNewActivity> {
 
-  String firstElementPeriod = list_period.first;
+
+
+
+
   String firstElementContent = list_activity.first;
-  //String firstElementFormat = list_format.first;
-  DateTime dateFrom  = DateTime.now();
-  DateTime dateTo  = DateTime.now();
+  late String parent = widget.parentActivity;
+  late String nameActivity;
+  late String tag;
+  int typeActivity=0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,11 +47,25 @@ class _PageNewActivityState extends State<PageNewActivity> {
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               labelText: 'Nombre de la Actividad',
+
             ),
+            onChanged: (texto){
+              nameActivity=texto;
+            },
           ),
         ),
-
-
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: TextFormField(
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              labelText: 'Tag',
+            ),
+            onChanged: (texto){
+              tag=texto;
+            },
+          ),
+        ),
         Row(
           children: [
             Padding(
@@ -60,13 +84,14 @@ class _PageNewActivityState extends State<PageNewActivity> {
                   }).toList(),
                   onChanged: (String? newValue) {
                     setState(() {
-                      dateFrom = DateTime.now();
+                      //dateFrom = DateTime.now();
                       if(newValue==list_activity.elementAt(0)){
+
+                        typeActivity=0;
                         //Proyecto
-                        dateFrom=DateTime.now();
-                        dateTo=DateTime.now();
                       }
                       if(newValue==list_activity.elementAt(1)){
+                        typeActivity=1;
                         //task
 
                       }
@@ -87,8 +112,9 @@ class _PageNewActivityState extends State<PageNewActivity> {
                 ),
                 onPressed: () {
 
-                    //_showMyDialog();
+                    addActivity(nameActivity, tag, typeActivity, parent);
 
+                    //_showMyDialog();
                 },
                 child: const Text('Crear Actividad'),),
 
