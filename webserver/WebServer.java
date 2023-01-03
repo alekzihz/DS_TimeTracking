@@ -111,6 +111,8 @@ public class WebServer {
 
     private String makeBodyAnswer(String[] tokens) {
       String body = "";
+
+      System.out.println("mi token"+ tokens[0]);
       switch (tokens[0]) {
         case "get_tree" : {
 
@@ -155,58 +157,45 @@ public class WebServer {
           break;
         }
 
-        case "add_activity:": {
+        case "add_activity": {
+
+          //TODO:VALIDAR CUANDO TAG ES VACIO
 
           System.out.println("estoy creando actividad");
-          String nameActivity = String.valueOf(Integer.parseInt(tokens[1]));
-          String tag = String.valueOf(Integer.parseInt(tokens[2]));
+          String nameActivity =tokens[1];
+          String tag = tokens[2];
           int typeActivity = Integer.parseInt(tokens[3]);
-          String parent = String.valueOf(Integer.parseInt(tokens[4]));
+          int idparent = Integer.parseInt(tokens[4]);
 
-
-          System.out.println("sss"+nameActivity);
-          System.out.println(typeActivity);
-          System.out.println(tag);
 
           //0 is project
           //1 is task
 
 
-          System.out.println("creado");
-          Project parentProject = new Project(parent);
+          Component aux = findActivityById(idparent);
+
           if(typeActivity == 0){
 
-            Project activity = new Project(nameActivity,parentProject);
+            Project activity = new Project(nameActivity,((Project) aux));
             activity.setTag(tag);
-            parentProject.addComponent(activity);
-            System.out.println("creado");
+            ((Project)aux).addComponent(activity);
             body = activity.toJson(1).toString();
 
           }else{
-            Task activity = new Task(nameActivity,parentProject);
+            Task activity = new Task(nameActivity,((Project) aux));
             activity.setTag(tag);
-            parentProject.addComponent(activity);
+            ((Project)aux).addComponent(activity);
             body = activity.toJson(1).toString();
           }
 
-
-
-
-
-
-
-
-
-
-
-
-
+          body="{}";
           break;
         }
 
         // TODO: add new task, project
         // TODO: edit task, project properties
         default:
+          System.out.println("error fefas");
           assert false;
       }
       System.out.println(body);
