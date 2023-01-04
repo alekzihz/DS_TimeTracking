@@ -144,6 +144,7 @@ public class WebServer {
           assert (activity!=null);
           Task task = (Task) activity;
           task.startTask();
+          task.setActive(true);
           body = "{}";
           break;
         }
@@ -153,6 +154,7 @@ public class WebServer {
           assert (activity!=null);
           Task task = (Task) activity;
           task.stopTask();
+          task.setActive(false);
           body = "{}";
           break;
         }
@@ -163,6 +165,11 @@ public class WebServer {
 
           System.out.println("estoy creando actividad");
           String nameActivity =tokens[1];
+          nameActivity  =nameActivity.replace("%20"," ");
+
+
+
+
           String tag = tokens[2];
           int typeActivity = Integer.parseInt(tokens[3]);
           int idparent = Integer.parseInt(tokens[4]);
