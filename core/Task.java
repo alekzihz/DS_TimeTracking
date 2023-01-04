@@ -32,6 +32,11 @@ public class Task extends Component{
 
 
     }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     public Task (String tagName){
 
         super(tagName);
