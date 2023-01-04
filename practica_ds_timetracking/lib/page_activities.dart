@@ -6,7 +6,9 @@ import 'package:practica_ds_timetracking/PageNewActivity.dart';
 
 import 'dart:async';
 
-
+//TODO: Al volver o dar click al boton HOME te retorna un JSON obsoleto
+//TODO: Devolver el Json actual con las tareas/proyectos actuales y el estado de tareas activas.
+//TODO: actualizar UML
 
 class PageActivities extends StatefulWidget {
   late int id;
@@ -75,7 +77,6 @@ class _PageActivitiesState extends State<PageActivities> {
             Scrollbar(
               child: ListView.separated(
                 // it's like ListView.builder() but better because it includes a separator between items
-
                 //itemCount:10,
                 padding: const EdgeInsets.all(16.0),
                 itemCount: snapshot.data!.root.children.length, // updated 16-dec-2022
@@ -145,19 +146,45 @@ class _PageActivitiesState extends State<PageActivities> {
       //trailing = Text('$strDuration');
       //trailingButton = Icon(Icons.not_started_outlined);
 
-      return ListTile(
+
+
+
+    return ListTile(
         title: Text('${activity.name}'),
         subtitle: Text('Tarea'),
         trailing: Wrap(
           spacing: 50,
           children: <Widget>[
-            Icon(Icons.not_started_outlined),
+
+
+            FloatingActionButton(
+              onPressed: () {
+                // Envuelve la reproducción o pausa en una llamada a `setState`. Esto asegura
+                // que se muestra el icono correcto
+                setState(() {
+                  // Si el vídeo se está reproduciendo, pausalo.
+                  if ((activity as Task).active) {
+                    stop(activity.id);
+                    _refresh();
+                  } else {
+                    start(activity.id);
+                    _refresh();
+                  }
+                });
+              },
+              // Muestra el icono correcto dependiendo del estado del vídeo.
+              child: Icon(
+                (activity as Task).active ? Icons.pause : Icons.play_arrow,
+              ),
+            ),
+
+            //icon: activity.active ? new Icon(Icons.pause):new Icon(Icons.play_arrow),
+
             Text('$strDuration'),
 
           ],
 
         ),
-
         onTap: () => _navigateDownIntervals(activity.id),
         onLongPress: () {
           if ((activity as Task).active) {
