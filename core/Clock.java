@@ -3,6 +3,7 @@ package core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,12 +25,25 @@ public class Clock extends Observable {
         assert seconds>0: "error, the clock needs a period in seconds greater than 0";
         setSeconds(seconds);
         setTimer(new Timer());
-        timer.scheduleAtFixedRate(new NotifyTask(),0, this.seconds *1000);
+
+        TimerTask c = new TimerTask() {
+
+            //LocalDateTime
+            @Override
+            public void run() {
+                LocalDateTime now =  LocalDateTime.now();
+                setChanged();
+                notifyObservers(now);
+
+            }
+        };
+
+        timer.scheduleAtFixedRate(c,0, this.seconds *1000);
         log.trace("clock could not instance");
         log.debug("clock has been created");
 
         //assert this!=null: "The clock could not been started";
-       }
+    }
     /**
      * Implementation of Singleton
      */
@@ -59,9 +73,12 @@ public class Clock extends Observable {
         @Override
         public void run() {
 
+            //aveces instanceClock puede ser null, por lo que puede llegar a petar
+            //instanceClock.setChanged();
+            //instanceClock.notifyObservers(this);
+
             //System.out.println(LocalDateTime.now());
-            instanceClock.setChanged();
-            instanceClock.notifyObservers(this);
+
         }
     }
 }
