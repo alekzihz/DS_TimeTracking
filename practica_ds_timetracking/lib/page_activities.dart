@@ -30,7 +30,7 @@ class _PageActivitiesState extends State<PageActivities> {
     super.initState();
     id = widget.id;
     futureTree = getTree(id);
-    //_activateTimer();
+    _activateTimer();
   }
 
   @override
@@ -51,7 +51,6 @@ class _PageActivitiesState extends State<PageActivities> {
                         print("pop");
                         Navigator.of(context).pop();
                       }
-
                     } // TODO go home page = root
                 ),
                 //TODO other actions
@@ -63,11 +62,11 @@ class _PageActivitiesState extends State<PageActivities> {
               actions: <Widget>[
                 IconButton(icon: Icon(Icons.home),
                     onPressed: () {
-                      while(Navigator.of(context).canPop()) {
-                        print("pop");
-                        Navigator.of(context).pop();
+                      while (Navigator.of(context).canPop()) {
+                        print("POP");
+                        Navigator.popUntil(context, ModalRoute.withName('/'));
                       }
-
+                      PageActivities(0);
                     } // TODO go home page = root
                 ),
                 //TODO other actions
@@ -133,7 +132,16 @@ class _PageActivitiesState extends State<PageActivities> {
       return ListTile(
         title: Text('${activity.name}'),
         subtitle: Text('Proyecto'),
-        trailing: Text('$strDuration'),
+        trailing: Wrap(
+          children: <Widget> [
+            (activity as Project).active ? new Text('$strDuration',
+              style: TextStyle(color: Colors.green),
+            ):
+            new Text('$strDuration',
+              style: TextStyle(color: Colors.black),
+            ),
+          ],
+        ),
         onTap: () => _navigateDownActivities(activity.id),
       );
     } else {

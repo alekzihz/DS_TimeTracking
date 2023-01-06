@@ -43,15 +43,13 @@ class _PageIntervalsState extends State<PageIntervals> {
               actions: <Widget>[
                 IconButton(icon: Icon(Icons.home),
                   onPressed: () {
-                    while(Navigator.of(context).canPop()) {
-                      print("pop");
-                      Navigator.of(context).pop();
-                    }
-                    /* this works also:
-                        Navigator.popUntil(context, ModalRoute.withName('/'));
-                      */
-                    PageActivities(0);
+                    Navigator.push(
+                      context,
 
+                      //it returns to updated tree.
+                      MaterialPageRoute(builder: (context) => PageActivities(0)),
+                    );
+                    PageActivities(0);
                   }, // TODO
                 )
               ],
@@ -86,10 +84,6 @@ class _PageIntervalsState extends State<PageIntervals> {
     // this removes the microseconds part
     String strFinalDate = interval.finalDate.toString().split('.')[0];
     return ListTile(
-
-
-
-
       title: Text('from ${strInitialDate} to ${strFinalDate}'),
       trailing: Wrap(
         children: <Widget> [
@@ -101,18 +95,9 @@ class _PageIntervalsState extends State<PageIntervals> {
             style: TextStyle(color: Colors.black),
           ),
         ],
-
-
-
-
-
-
-
       ),
     );
   }
-
-
   @override
   void dispose() {
     // "The framework calls this method when this State object will never build again"
@@ -120,13 +105,10 @@ class _PageIntervalsState extends State<PageIntervals> {
     _timer.cancel();
     super.dispose();
   }
-
   void _activateTimer() {
     _timer = Timer.periodic(Duration(seconds: periodeRefresh), (Timer t) {
       futureTree = getTree(id);
       setState(() {});
     });
   }
-
-
 }
