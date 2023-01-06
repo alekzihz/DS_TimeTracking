@@ -34,11 +34,11 @@ class Project extends Activity {
       // json has only 1 level because depth=1 or 0 in time_tracker
       for (Map<String, dynamic> jsonChild in json['activities']) {
         if (jsonChild['class'] == "project") {
-          children?.add(Project.fromJson(jsonChild));
+          children.add(Project.fromJson(jsonChild));
           // condition on key avoids infinite recursion
         } else if (jsonChild['class'] == "task") {
 
-          children?.add(Task.fromJson(jsonChild));
+          children.add(Task.fromJson(jsonChild));
         } else {
           assert(false);
         }
@@ -56,21 +56,25 @@ class Task extends Activity {
 
     active = json['active'];
     for (Map<String, dynamic> jsonChild in json['intervals']) {
-      children?.add(Interval.fromJson(jsonChild));
+      children.add(Interval.fromJson(jsonChild));
     }
   }
 }
 
 
 class Interval {
-  late int id;
+
+  //TODO: en jsonput de interval servidor poner el atributo al json
+
+
+  //late int id;
   DateTime? initialDate;
   DateTime? finalDate;
   late int duration;
   late bool active;
 
   Interval.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
+      : //id = json['id'],
         initialDate = json['initialDate']==null ? null : _dateFormatter.parse(json['initialDate']),
         finalDate = json['finalDate']==null ? null : _dateFormatter.parse(json['finalDate']),
         duration = json['duration'],

@@ -25,7 +25,7 @@ class _PageNewActivityState extends State<PageNewActivity> {
   String firstElementContent = list_activity.first;
   late int idParent = widget.idParentActivity;
   late String nameActivity;
-  late String tag;
+  String tag="none";
   int typeActivity=0;
   @override
   Widget build(BuildContext context) {

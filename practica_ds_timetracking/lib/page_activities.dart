@@ -21,7 +21,7 @@ class _PageActivitiesState extends State<PageActivities> {
   late int  id;
   late Future<Tree> futureTree;
   late Timer  _timer;
-  static const int  periodeRefresh = 6;
+  static const int  periodeRefresh = 2;
 
 
 
@@ -155,8 +155,6 @@ class _PageActivitiesState extends State<PageActivities> {
         trailing: Wrap(
           spacing: 50,
           children: <Widget>[
-
-
             FloatingActionButton(
               onPressed: () {
                 // Envuelve la reproducción o pausa en una llamada a `setState`. Esto asegura
@@ -167,6 +165,8 @@ class _PageActivitiesState extends State<PageActivities> {
                     stop(activity.id);
                     _refresh();
                   } else {
+
+
                     start(activity.id);
                     _refresh();
                   }
@@ -174,13 +174,20 @@ class _PageActivitiesState extends State<PageActivities> {
               },
               // Muestra el icono correcto dependiendo del estado del vídeo.
               child: Icon(
-                (activity as Task).active ? Icons.pause : Icons.play_arrow,
+                (activity as Task).active ? Icons.pause : Icons.play_arrow_outlined,
               ),
             ),
 
             //icon: activity.active ? new Icon(Icons.pause):new Icon(Icons.play_arrow),
+            //cambia el color del texto duracion cuando la tarea esta activa
+           (activity as Task).active ? new Text('$strDuration',
+            style: TextStyle(color: Colors.green),
 
-            Text('$strDuration'),
+            ):
+           new Text('$strDuration',
+             style: TextStyle(color: Colors.black),
+
+           ),
 
           ],
 
@@ -207,8 +214,8 @@ class _PageActivitiesState extends State<PageActivities> {
         .push(MaterialPageRoute<void>(
       builder: (context) => PageActivities(childId),
     )).then((var value) {
-      //_activateTimer();
-      //_refresh();
+      _activateTimer();
+      _refresh();
 
     });
   }
@@ -218,15 +225,13 @@ class _PageActivitiesState extends State<PageActivities> {
         .push(MaterialPageRoute<void>(
       builder: (context) => PageIntervals(childId),
     )).then((var value) {
-      //_activateTimer();
-      //_refresh();
+      _activateTimer();
+      _refresh();
     });
   }
 
 
   void _refresh() async {
-
-
     futureTree = getTree(id); // to be used in build()
     setState(() {});
   }

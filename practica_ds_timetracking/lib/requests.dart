@@ -69,6 +69,7 @@ Future<void> stop(int id) async {
 }
 
 Future<void> addActivity(String nameActivity, String tag, int typeActivity, int idParent) async {
+
   String uri = "$baseUrl/add_activity?$nameActivity&$tag&$typeActivity&$idParent";
 
 

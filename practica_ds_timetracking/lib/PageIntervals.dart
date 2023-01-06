@@ -17,7 +17,7 @@ class _PageIntervalsState extends State<PageIntervals> {
   late int id;
   late Future<Tree.Tree> futureTree;
   late Timer _timer;
-  static const int  periodeRefresh = 6;
+  static const int  periodeRefresh = 2;
 
 
   @override
@@ -86,8 +86,29 @@ class _PageIntervalsState extends State<PageIntervals> {
     // this removes the microseconds part
     String strFinalDate = interval.finalDate.toString().split('.')[0];
     return ListTile(
+
+
+
+
       title: Text('from ${strInitialDate} to ${strFinalDate}'),
-      trailing: Text('$strDuration'),
+      trailing: Wrap(
+        children: <Widget> [
+          interval.active ? new Text('$strDuration',
+            style: TextStyle(color: Colors.green),
+
+          ):
+          new Text('$strDuration',
+            style: TextStyle(color: Colors.black),
+          ),
+        ],
+
+
+
+
+
+
+
+      ),
     );
   }
 
