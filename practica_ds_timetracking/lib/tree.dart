@@ -15,6 +15,13 @@ abstract class Activity {
   DateTime? initialDate;
   DateTime? finalDate;
   late int duration;
+
+  late String tag;
+
+  //List<dynamic> tags = List<dynamic>.empty(growable: true);
+
+  //List <String> tags = ["1","3"];
+
   List<dynamic> children = List<dynamic>.empty(growable: true);
 
 
@@ -23,7 +30,14 @@ abstract class Activity {
         name = json['name'],
         initialDate = json['initialDate']==null ? null : _dateFormatter.parse(json['initialDate']),
         finalDate = json['finalDate']==null ? null : _dateFormatter.parse(json['finalDate']),
-        duration = json['duration'];
+        duration = json['duration'],
+        tag = json['tag'];
+
+
+
+        //tags = json['tag'];
+
+        //tag= json['tag'] == null ? "null" : json['tag'];
 }
 
 
@@ -32,6 +46,8 @@ class Project extends Activity {
   late bool active;
 
   Project.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
+
+    //print("mi tagggs"+json['tag']);
     active = json['active'];
     if (json.containsKey('activities')) {
       // json has only 1 level because depth=1 or 0 in time_tracker
@@ -91,8 +107,6 @@ class Tree {
   late Activity root;
 
   Tree(Map<String, dynamic> dec) {
-
-
 
     // 1 level tree, root and children only, root is either Project or Task. If Project
     // children are Project or Task, that is, Activity. If root is Task, children are Interval.

@@ -3,6 +3,11 @@ import 'package:practica_ds_timetracking/tree.dart' hide getTree;
 import 'package:practica_ds_timetracking/PageIntervals.dart';
 import 'package:practica_ds_timetracking/requests.dart';
 import 'package:practica_ds_timetracking/PageNewActivity.dart';
+import 'package:practica_ds_timetracking/PageInfoActivity.dart';
+
+
+
+import 'package:practica_ds_timetracking/searchByTag.dart';
 
 import 'dart:async';
 
@@ -22,8 +27,7 @@ class _PageActivitiesState extends State<PageActivities> {
   late Future<Tree> futureTree;
   late Timer  _timer;
   static const int  periodeRefresh = 2;
-
-
+  List<Activity> lista_activity = [];
 
   @override
   void initState() {
@@ -35,8 +39,10 @@ class _PageActivitiesState extends State<PageActivities> {
 
   @override
   Widget build(BuildContext context) {
+
     return FutureBuilder<Tree>(
       future: futureTree,
+
       // this makes the tree of children, when available, go into snapshot.data
       builder: (context, snapshot) {
         // anonymous function
@@ -45,6 +51,14 @@ class _PageActivitiesState extends State<PageActivities> {
             appBar: snapshot.data!.root.name=="root"? AppBar(
               title: Text("Proyectos Principales"), // updated 16-dec-2022
               actions: <Widget>[
+
+                IconButton(onPressed: (){
+                },
+                    icon: Icon(Icons.language)
+                ),
+
+
+
                 IconButton(icon: Icon(Icons.home),
                     onPressed: () {
                       while(Navigator.of(context).canPop()) {
@@ -60,6 +74,11 @@ class _PageActivitiesState extends State<PageActivities> {
               title: Text(snapshot.data!.root.name), // updated 16-dec-2022
 
               actions: <Widget>[
+
+                IconButton(onPressed: (){
+                      },
+                icon: Icon(Icons.language)
+                ),
                 IconButton(icon: Icon(Icons.home),
                     onPressed: () {
                       while (Navigator.of(context).canPop()) {
@@ -72,21 +91,58 @@ class _PageActivitiesState extends State<PageActivities> {
                 //TODO other actions
               ],
             ),
-            body:
-            Scrollbar(
-              child: ListView.separated(
-                // it's like ListView.builder() but better because it includes a separator between items
-                //itemCount:10,
-                padding: const EdgeInsets.all(16.0),
-                itemCount: snapshot.data!.root.children.length, // updated 16-dec-2022
-                itemBuilder: (BuildContext context, int index) =>
-                //activity, index
-                _buildRow(snapshot.data!.root.children[index], index), // updated 16-dec-2022
-                separatorBuilder: (BuildContext context, int index) =>
-                const Divider(),
-              ),
 
-            ),
+
+            body:
+                Column(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(onPressed: (){
+
+                        //itemBuilder: (BuildContext context, int index)=>
+                            //_listOrdenada(snapshot.data!.root.children[index], index);
+
+                        //separatorBuilder: (BuildContext context, int index) =>
+                        //const Divider();
+                        //),
+
+                        //lista_activity.reversed;
+                        for (Activity i in lista_activity.reversed){
+                          print(i.name);
+
+                        }
+
+
+                        //TODO funcion sort.
+
+                      },
+                          icon: Icon(Icons.filter_alt_outlined)),
+                    ),
+
+                    Expanded(child: ListView.separated(
+                      // it's like ListView.builder() but better because it includes a separator between items
+                      //itemCount:10,
+                      padding: const EdgeInsets.all(16.0),
+                      itemCount: snapshot.data!.root.children.length, // updated 16-dec-2022
+                      itemBuilder: (BuildContext context, int index) =>
+                      //activity, index
+                      _buildRow(snapshot.data!.root.children[index], index), // updated 16-dec-2022
+                      separatorBuilder: (BuildContext context, int index) =>
+                      const Divider(),
+                    ),)
+
+                  ],
+                ),
+
+
+
+
+
+
+
+
+
 
 
             floatingActionButton: FloatingActionButton(
@@ -99,6 +155,7 @@ class _PageActivitiesState extends State<PageActivities> {
               backgroundColor: Colors.green,
               child: const Icon(Icons.more_time),
             ),
+
           );
 
 
@@ -115,7 +172,6 @@ class _PageActivitiesState extends State<PageActivities> {
       },
     );
   }
-
   @override
   void dispose() {
     // "The framework calls this method when this State object will never build again"
@@ -123,11 +179,9 @@ class _PageActivitiesState extends State<PageActivities> {
     _timer.cancel();
     super.dispose();
   }
-
   Widget _buildRow(Activity activity, int index) {
     String strDuration = Duration(seconds: activity.duration).toString().split('.').first;
     // split by '.' and taking first element of resulting list removes the microseconds part
-
     if (activity is Project) {
       return ListTile(
         title: Text('${activity.name}'),
@@ -143,6 +197,18 @@ class _PageActivitiesState extends State<PageActivities> {
           ],
         ),
         onTap: () => _navigateDownActivities(activity.id),
+        leading: IconButton(
+          alignment: Alignment.center,
+          icon: const Icon(Icons.info),
+          //trailing: "gola",
+          onPressed: () {
+            //_navigateDownProjectIntervals(activity.id);
+            Navigator.of(context)
+                .push(MaterialPageRoute<void>(
+              builder: (context) => PageInfoActivity(activity),
+            ));
+          },
+        ),
       );
     } else {
 
@@ -154,10 +220,7 @@ class _PageActivitiesState extends State<PageActivities> {
       //trailing = Text('$strDuration');
       //trailingButton = Icon(Icons.not_started_outlined);
 
-
-
-
-    return ListTile(
+      return ListTile(
         title: Text('${activity.name}'),
         subtitle: Text('Tarea'),
         trailing: Wrap(
@@ -188,14 +251,14 @@ class _PageActivitiesState extends State<PageActivities> {
 
             //icon: activity.active ? new Icon(Icons.pause):new Icon(Icons.play_arrow),
             //cambia el color del texto duracion cuando la tarea esta activa
-           (activity as Task).active ? new Text('$strDuration',
-            style: TextStyle(color: Colors.green),
+            (activity as Task).active ? new Text('$strDuration',
+              style: TextStyle(color: Colors.green),
 
             ):
-           new Text('$strDuration',
-             style: TextStyle(color: Colors.black),
+            new Text('$strDuration',
+              style: TextStyle(color: Colors.black),
 
-           ),
+            ),
 
           ],
 
@@ -217,9 +280,9 @@ class _PageActivitiesState extends State<PageActivities> {
 
   }
 
+  //construye el arbol de hijos del proyecto
   void _navigateDownActivities(int childId) {
-    Navigator.of(context)
-        .push(MaterialPageRoute<void>(
+    Navigator.of(context).push(MaterialPageRoute<void>(
       builder: (context) => PageActivities(childId),
     )).then((var value) {
       _activateTimer();
@@ -251,6 +314,60 @@ class _PageActivitiesState extends State<PageActivities> {
       setState(() {});
     });
   }
+
+  void startSearching() {
+    setState(() {
+     // _isSearching = true;
+    });
+  }
+
+  Widget getAppBarSearching(Function cancelSearch, Function searching,
+      TextEditingController searchController) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: () {
+            cancelSearch();
+          }),
+      title: Padding(
+        padding: const EdgeInsets.only(bottom: 10, right: 10),
+        child: TextField(
+          controller: searchController,
+          onEditingComplete: () {
+            searching();
+          },
+          style: new TextStyle(color: Colors.white),
+          cursorColor: Colors.white,
+          autofocus: true,
+          decoration: InputDecoration(
+            focusColor: Colors.white,
+            focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white)),
+            enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white)),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _listOrdenada(children, index) {
+
+
+
+
+
+
+
+  }
+
+
+
+
+
+
+
 }
 
 

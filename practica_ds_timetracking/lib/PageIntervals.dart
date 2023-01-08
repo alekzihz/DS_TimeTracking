@@ -54,7 +54,7 @@ class _PageIntervalsState extends State<PageIntervals> {
                 )
               ],
             ),
-            body: ListView.separated(
+            body:ListView.separated(
               // it's like ListView.builder() but better because it includes a separator between items
               padding: const EdgeInsets.all(16.0),
               itemCount: numChildren,
