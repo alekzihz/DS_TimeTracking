@@ -22,6 +22,12 @@ public class Project extends Component{
     private List<Component> childrenProject=new ArrayList<>();
     private final Logger log = LoggerFactory.getLogger("Project");
 
+    private Boolean active=false;
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     public Project(String tagName) {
 
 
@@ -78,6 +84,7 @@ public class Project extends Component{
         Printer pi = new Printer(this);
         //si duracion es 0 set newduration
         setDateFinal(newFinalDate);
+        setActive(true);
         if(this.duration.getSeconds()==0){
 
             this.setDuration(newDuration);
@@ -87,25 +94,33 @@ public class Project extends Component{
         else{
             assert clock != null;
             this.duration=this.duration.plusSeconds(clock.getSeconds());
-                //this.setDuration(this.duration);
-                pi.visitProject(this);
+            //this.setDuration(this.duration);
+            pi.visitProject(this);
         }
 
         //mientras el proyecto tenga un padre actualizar las duracions.
         if(this.parentProject!=null) {
-                this.parentProject.updateDurationAndFinalDate(this.duration, clock,newFinalDate);
-            }
+            this.parentProject.updateDurationAndFinalDate(this.duration, clock,newFinalDate);
+        }
 
         assert this!=null:"error, updating project";
         //log.warn("it could not update this project");
         assert invariant();
 
     }
+
+    public void updateActiveProject(){
+        this.setActive(false);
+        if(this.parentProject!=null){
+            this.parentProject.updateActiveProject();
+        }
+    }
+
     /**
      * @param v type visitor for visiting the Project
      */
     @Override
-    protected void acceptVisitor(Visitor v) {
+    public void acceptVisitor(Visitor v) {
 
         assert v !=null: "error, visit project cannot be null";
         assert invariant();
@@ -133,7 +148,7 @@ public class Project extends Component{
         childrenProject.add(component);
         component.setParentProject(this);
         assert invariant();
-       //component.setTagParentProject(this.tagName);
+        //component.setTagParentProject(this.tagName);
 
     }
 
@@ -150,11 +165,17 @@ public class Project extends Component{
         JSONObject json = new JSONObject();
         json.put("class", "project");
         super.toJson(json);
+
+        json.put("active", active);
+
+
         if (depth>0) {
             JSONArray jsonActivities = new JSONArray();
             for (Component activity : childrenProject) {
                 if(activity instanceof Task){
                     jsonActivities.put(((Task)activity).toJson(depth - 1));
+
+
                 }else {
                     jsonActivities.put(((Project)activity).toJson(depth - 1));
                 }
@@ -164,6 +185,10 @@ public class Project extends Component{
         }
         return json;
     }
+
+
+
+
 
     @Override
     public Component findActivityById(int id) {
@@ -183,6 +208,4 @@ public class Project extends Component{
         }
         return null;
     }
-
-
 }

@@ -32,23 +32,21 @@ public class Task extends Component{
 
 
     }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
     public Task (String tagName){
 
         super(tagName);
         id = nextId.incrementAndGet();
 
         assert invariant();
-        log.info("estoy en active"+this.active);
+        //log.info("estoy en active"+this.active);
         log.info("adding task "+tagName);
 
 
     }
 
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
     private boolean invariant(){
         if(this.getTagName().equals("") || this.getTagName().equals(null) || this ==null){
@@ -152,6 +150,10 @@ public class Task extends Component{
 
         Interval stop=intervalList.get(intervalList.size()-1);
         stop.stopInterval();
+
+        this.parentProject.updateActiveProject();
+
+
         log.info(this.tagName+ " Stops");
 
         assert this !=null: "error stopping task "+ this.getTagName();

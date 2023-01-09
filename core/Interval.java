@@ -19,21 +19,30 @@ public class Interval implements Observer {
     private LocalDateTime initialDate;
     private Duration duration;
     private Clock timer;
+
+    private Boolean active=false;
     private final Logger log = LoggerFactory.getLogger("Interval");
 
 
     public Interval(Task task) {
 
         assert task!=null:"error task is null";
-        Clock newTimer = Clock.getInstanceClock(2);
+        Clock newTimer = core.Clock.getInstanceClock(2);
+        //System.out.println(newTimer);
         setTask(task);
         setInitialDate(LocalDateTime.now());
         setFinalDate(LocalDateTime.now());
         setDuration(Duration.ofSeconds(0));
         newTimer.addObserver(this);
+
+        setActive(true);
         setTimer(newTimer);
 
         assert invariant();
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     private boolean invariant(){
@@ -96,10 +105,13 @@ public class Interval implements Observer {
     }
     public void stopInterval() {
         timer.deleteObserver(this);
+        setActive(false);
     }
 
+
+
     public JSONObject toJson() {
-       final DateTimeFormatter formatter =
+        final DateTimeFormatter formatter =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         JSONObject json = new JSONObject();
@@ -110,6 +122,7 @@ public class Interval implements Observer {
         json.put("finalDate", finalDate==null
             ? JSONObject.NULL : formatter.format(finalDate));
         json.put("duration", duration.toSeconds());
+        json.put("active", active);
         return json;
     }
 }
