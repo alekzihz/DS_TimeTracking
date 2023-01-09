@@ -1,7 +1,11 @@
 package webserver;
 import core.Component;
 import core.Project;
+import core.SearchTag;
 import core.Task;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -139,6 +143,7 @@ public class WebServer {
           Task task = (Task) activity;
           task.startTask();
           task.setActive(true);
+          //body = task.toJson(1).toString();
           body = "{}";
           break;
         }
@@ -149,18 +154,17 @@ public class WebServer {
           Task task = (Task) activity;
           task.stopTask();
           task.setActive(false);
+
+          //body = task.toJson(1).toString();
           body = "{}";
           break;
         }
 
         case "add_activity": {
-
           //TODO:VALIDAR CUANDO TAG ES VACIO
 
           String nameActivity =tokens[1];
           nameActivity  =nameActivity.replace("%20"," ");
-
-
           String tag = tokens[2];
           String [] auxtag;
           int typeActivity = Integer.parseInt(tokens[3]);
@@ -168,7 +172,6 @@ public class WebServer {
 
           //0 is project
           //1 is task
-
           auxtag= tag.split(",");
           Component aux = findActivityById(idparent);
           if(typeActivity == 0){
@@ -178,7 +181,6 @@ public class WebServer {
             }
             ((Project)aux).addComponent(activity);
             body = activity.toJson(1).toString();
-
           }else{
             Task activity = new Task(nameActivity,((Project) aux));
             for (String i : auxtag){
@@ -187,8 +189,37 @@ public class WebServer {
             ((Project)aux).addComponent(activity);
             body = activity.toJson(1).toString();
           }
-
           body="{}";
+          break;
+        }
+        case "searchByTag":{
+
+          //String tag =tokens[1];
+          if(tokens[1]!=null) {
+            SearchTag search = new SearchTag(tokens[1]);
+            Component root = findActivityById(0);
+            ((Project) root).acceptVisitor(search);
+            JSONObject jsonSearch = new JSONObject();
+            JSONArray listSearch = new JSONArray();
+
+            for (Component i : search.getResult()) {
+
+              if (i instanceof Project) {
+                listSearch.put(((Project) i).toJson(1));
+              } else {
+                listSearch.put(((Task) i).toJson(1));
+              }
+              //listSearch.put(i);
+            }
+
+            System.out.println(listSearch.toString());
+
+            jsonSearch.put("results", listSearch);
+
+            body = jsonSearch.toString();
+          }
+
+
           break;
         }
 
