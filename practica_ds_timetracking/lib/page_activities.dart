@@ -29,12 +29,17 @@ class _PageActivitiesState extends State<PageActivities> {
   static const int  periodeRefresh = 2;
   List<Activity> lista_activity = [];
 
+
+  //button search
+  //late String value ;
+
+
   @override
   void initState() {
     super.initState();
     id = widget.id;
     futureTree = getTree(id);
-    _activateTimer();
+   // _activateTimer();
   }
 
   @override
@@ -49,16 +54,15 @@ class _PageActivitiesState extends State<PageActivities> {
         if (snapshot.hasData) {
           return Scaffold(
             appBar: snapshot.data!.root.name=="root"? AppBar(
-              title: Text("Proyectos Principales"), // updated 16-dec-2022
+              title:Text("Proyectos Principales"),
+              automaticallyImplyLeading: false,
+              centerTitle: true,// updated 16-dec-2022
               actions: <Widget>[
 
                 IconButton(onPressed: (){
                 },
                     icon: Icon(Icons.language)
                 ),
-
-
-
                 IconButton(icon: Icon(Icons.home),
                     onPressed: () {
                       while(Navigator.of(context).canPop()) {
@@ -96,6 +100,32 @@ class _PageActivitiesState extends State<PageActivities> {
             body:
                 Column(
                   children: <Widget>[
+                    TextField(
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (String val){
+                        if(val==null){
+                          Expanded(child: ListView.separated(
+                            // it's like ListView.builder() but better because it includes a separator between items
+                            //itemCount:10,
+                            padding: const EdgeInsets.all(16.0),
+                            itemCount: snapshot.data!.root.children.length, // updated 16-dec-2022
+                            itemBuilder: (BuildContext context, int index) =>
+                            //activity, index
+                            _buildRow(snapshot.data!.root.children[index], index), // updated 16-dec-2022
+                            separatorBuilder: (BuildContext context, int index) =>
+                            const Divider(),
+                          ),
+                          );
+                        }else{
+
+                        }
+                        //searchByTag(val);
+                        //print(val);
+                        //value=val;
+                      },
+                    ),
                     Align(
                       alignment: Alignment.topRight,
                       child: IconButton(onPressed: (){
@@ -112,10 +142,7 @@ class _PageActivitiesState extends State<PageActivities> {
                           print(i.name);
 
                         }
-
-
                         //TODO funcion sort.
-
                       },
                           icon: Icon(Icons.filter_alt_outlined)),
                     ),
@@ -130,7 +157,8 @@ class _PageActivitiesState extends State<PageActivities> {
                       _buildRow(snapshot.data!.root.children[index], index), // updated 16-dec-2022
                       separatorBuilder: (BuildContext context, int index) =>
                       const Divider(),
-                    ),)
+                    ),
+                    )
 
                   ],
                 ),

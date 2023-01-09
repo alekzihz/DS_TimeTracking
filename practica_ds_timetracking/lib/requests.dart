@@ -85,3 +85,15 @@ Future<void> addActivity(String nameActivity, String tag, int typeActivity, int 
     throw Exception('Failed to get children');
   }
 }
+
+Future<void> searchByTag(String tag) async {
+  String uri = "$baseUrl/searchByTag?$tag";
+  var url =  Uri.parse(uri);
+  final response = await client.get(url);
+  if (response.statusCode == 200) {
+    print("statusCode=$response.statusCode");
+  } else {
+    print("statusCode=$response.statusCode");
+    throw Exception('Failed to get children');
+  }
+}
