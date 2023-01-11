@@ -86,12 +86,14 @@ Future<void> addActivity(String nameActivity, String tag, int typeActivity, int 
   }
 }
 
-Future<void> searchByTag(String tag) async {
+Future<Tree> searchByTag(String tag) async {
   String uri = "$baseUrl/searchByTag?$tag";
   var url =  Uri.parse(uri);
   final response = await client.get(url);
   if (response.statusCode == 200) {
     print("statusCode=$response.statusCode");
+    Map<String, dynamic> decoded = convert.jsonDecode(response.body);
+    return Tree(decoded);
   } else {
     print("statusCode=$response.statusCode");
     throw Exception('Failed to get children');

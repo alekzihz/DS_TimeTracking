@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:practica_ds_timetracking/tree.dart' hide getTree;
 import 'package:practica_ds_timetracking/PageIntervals.dart';
@@ -29,36 +31,33 @@ class _PageActivitiesState extends State<PageActivities> {
   static const int  periodeRefresh = 2;
   List<Activity> lista_activity = [];
 
+  late String title="Proyectos Principales";
 
   //button search
-  //late String value ;
-
+  late String value="" ;
 
   @override
   void initState() {
     super.initState();
     id = widget.id;
     futureTree = getTree(id);
-   // _activateTimer();
+    //_activateTimer();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder<Tree>(
       future: futureTree,
-
       // this makes the tree of children, when available, go into snapshot.data
       builder: (context, snapshot) {
         // anonymous function
         if (snapshot.hasData) {
           return Scaffold(
             appBar: snapshot.data!.root.name=="root"? AppBar(
-              title:Text("Proyectos Principales"),
+              title:Text(title),
               automaticallyImplyLeading: false,
               centerTitle: true,// updated 16-dec-2022
               actions: <Widget>[
-
                 IconButton(onPressed: (){
                 },
                     icon: Icon(Icons.language)
@@ -73,12 +72,9 @@ class _PageActivitiesState extends State<PageActivities> {
                 ),
                 //TODO other actions
               ],
-
             ) :AppBar(
               title: Text(snapshot.data!.root.name), // updated 16-dec-2022
-
               actions: <Widget>[
-
                 IconButton(onPressed: (){
                       },
                 icon: Icon(Icons.language)
@@ -95,8 +91,6 @@ class _PageActivitiesState extends State<PageActivities> {
                 //TODO other actions
               ],
             ),
-
-
             body:
                 Column(
                   children: <Widget>[
@@ -105,25 +99,16 @@ class _PageActivitiesState extends State<PageActivities> {
                         prefixIcon: Icon(Icons.search),
                       ),
                       onChanged: (String val){
-                        if(val==null){
-                          Expanded(child: ListView.separated(
-                            // it's like ListView.builder() but better because it includes a separator between items
-                            //itemCount:10,
-                            padding: const EdgeInsets.all(16.0),
-                            itemCount: snapshot.data!.root.children.length, // updated 16-dec-2022
-                            itemBuilder: (BuildContext context, int index) =>
-                            //activity, index
-                            _buildRow(snapshot.data!.root.children[index], index), // updated 16-dec-2022
-                            separatorBuilder: (BuildContext context, int index) =>
-                            const Divider(),
-                          ),
-                          );
+                        if(val!=""){
+                          title="Buscando...";
+                          futureTree=searchByTag(val);
+                          value = val;
+                          setState(() {});
                         }else{
-
+                          title="Proyectos Principales";
+                          futureTree=getTree(0);
+                          setState(() {});
                         }
-                        //searchByTag(val);
-                        //print(val);
-                        //value=val;
                       },
                     ),
                     Align(
@@ -147,18 +132,23 @@ class _PageActivitiesState extends State<PageActivities> {
                           icon: Icon(Icons.filter_alt_outlined)),
                     ),
 
-                    Expanded(child: ListView.separated(
+                    Expanded(child:
+                    ListView.separated(
                       // it's like ListView.builder() but better because it includes a separator between items
                       //itemCount:10,
+
                       padding: const EdgeInsets.all(16.0),
                       itemCount: snapshot.data!.root.children.length, // updated 16-dec-2022
                       itemBuilder: (BuildContext context, int index) =>
                       //activity, index
                       _buildRow(snapshot.data!.root.children[index], index), // updated 16-dec-2022
+
                       separatorBuilder: (BuildContext context, int index) =>
                       const Divider(),
-                    ),
                     )
+
+                    )
+
 
                   ],
                 ),
@@ -313,7 +303,7 @@ class _PageActivitiesState extends State<PageActivities> {
     Navigator.of(context).push(MaterialPageRoute<void>(
       builder: (context) => PageActivities(childId),
     )).then((var value) {
-      _activateTimer();
+      //_activateTimer();
       _refresh();
 
     });
@@ -345,7 +335,6 @@ class _PageActivitiesState extends State<PageActivities> {
 
   void startSearching() {
     setState(() {
-     // _isSearching = true;
     });
   }
 
