@@ -202,6 +202,8 @@ public class WebServer {
             JSONObject jsonSearch = new JSONObject();
             JSONArray listSearch = new JSONArray();
 
+            jsonSearch=((Project) root).toJson(1);
+
             for (Component i : search.getResult()) {
 
               if (i instanceof Project) {
@@ -211,10 +213,8 @@ public class WebServer {
               }
               //listSearch.put(i);
             }
-
-            System.out.println(listSearch.toString());
-
-            jsonSearch.put("results", listSearch);
+            //System.out.println(listSearch.toString());
+            jsonSearch.put("activities", listSearch);
 
             body = jsonSearch.toString();
           }
