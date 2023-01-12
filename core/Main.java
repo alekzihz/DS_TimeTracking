@@ -29,7 +29,7 @@ public class Main {
         //rootA.findActivityById(11);
         apendiceB();
 
-       //testTag();
+        //testTag();
         //crearJSON();
         //readJson();
         //apendiceA();
@@ -161,7 +161,7 @@ public class Main {
         timeTracker.addComponent(firstMilestone);
 
 
-        Clock clock = Clock.getInstanceClock(2);
+        Clock clock = core.Clock.getInstanceClock(2);
 
 
         transportation.startTask();
@@ -367,11 +367,9 @@ public class Main {
         jo.put("id", root.getId());
 
         if(root.getChildrenProject()!=null){
-
             for (Component i: root.getChildrenProject()){
                 //System.out.println(i.getTagName());
                 list.put(writeChildrenRoot(i));
-
             }
             jo.put("children",list);
         }
