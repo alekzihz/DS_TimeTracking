@@ -31,6 +31,10 @@ public abstract class Component {
     //protected String tagParentProject;
 
 
+    public static AtomicInteger getNextId() {
+        return nextId;
+    }
+
     public Component(String tagName) {
         setTagName(tagName);
         log.info("adding component " + tagName);
@@ -92,8 +96,6 @@ public abstract class Component {
     public void setParentProject(Project parentProject) {
         this.parentProject = parentProject;
     }
-    //public void setTagParentProject(String tagParentProject){this.tagParentProject=tagParentProject;}
-
 
     abstract void updateDurationAndFinalDate(Duration newDuration, Clock newTimer, LocalDateTime finalDate);
 
@@ -109,20 +111,18 @@ public abstract class Component {
 
     public abstract Component findActivityById(int id);
 
-
-
     protected static final DateTimeFormatter formatter =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
     protected void toJson(JSONObject json) {
-
-        String tag  = this.getTag().toString();
-
-
 
         if (this.getTag().size()==0){
             this.setTag("none");
         }
+        if (this.getTagName()=="root"){
+            this.tag.clear();
+        }
+        String tag  = this.getTag().toString();
 
         json.put("id", id);
         json.put("name", tagName);
@@ -134,13 +134,6 @@ public abstract class Component {
         json.put("tag", tag);
 
     }
-
-
-
-
-
-
-
 }
 
 
