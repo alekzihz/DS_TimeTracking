@@ -1,9 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:practica_ds_timetracking/page_activities.dart';
 import 'package:practica_ds_timetracking/tree.dart' as Tree hide getTree;
 import 'package:practica_ds_timetracking/requests.dart';
+
+
+import 'generated/l10n.dart';
 
 class PageIntervals extends StatefulWidget {
   late int id;
@@ -45,7 +49,6 @@ class _PageIntervalsState extends State<PageIntervals> {
                   onPressed: () {
                     Navigator.push(
                       context,
-
                       //it returns to updated tree.
                       MaterialPageRoute(builder: (context) => PageActivities(0)),
                     );
@@ -83,13 +86,36 @@ class _PageIntervalsState extends State<PageIntervals> {
     String strInitialDate = interval.initialDate.toString().split('.')[0];
     // this removes the microseconds part
     String strFinalDate = interval.finalDate.toString().split('.')[0];
+
+
+
+
+
+    //DateTime now = DateTime.now();
+
+   DateTime initial= DateTime.parse(strInitialDate);
+    DateTime finalD= DateTime.parse(strFinalDate);
+
+    print(finalD.toString());
+
+
+    //String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(interval.initialDate);
+    //String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(interval.initialDate);
+
+    //DateFormat a = DateFormat('yyyy-mm-dd').format(interval.initialDate) ;
+    //format(interval.initialDate);
+
+
+
+
     return ListTile(
-      title: Text('from ${strInitialDate} to ${strFinalDate}'),
+
+      //title: Text('from ${strInitialDate}   to ${strFinalDate}'),
+      title: Text('${S.of(context).commonInitialDateFormat(initial)}\n${S.of(context).commonFinalDateFormat(finalD)}'),
       trailing: Wrap(
         children: <Widget> [
           interval.active ? new Text('$strDuration',
             style: TextStyle(color: Colors.green),
-
           ):
           new Text('$strDuration',
             style: TextStyle(color: Colors.black),

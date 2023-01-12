@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert' as convert;
 
-final DateFormat _dateFormatter = DateFormat("yyyy-MM-dd HH:mm:ss");
+final DateFormat _dateFormatter = DateFormat("dd-MM-yyyy HH:mm:ss");
+
 
 abstract class Activity {
 
@@ -87,12 +88,16 @@ class Interval {
 
   //TODO: en jsonput de interval servidor poner el atributo al json
 
-
+  //final DateFormat _dateFormatter = DateFormat("dd-MM-yyyy HH:mm:ss");
   //late int id;
   DateTime? initialDate;
   DateTime? finalDate;
   late int duration;
   late bool active;
+
+
+
+
 
   Interval.fromJson(Map<String, dynamic> json)
       : //id = json['id'],

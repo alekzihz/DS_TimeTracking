@@ -1,0 +1,32 @@
+{
+  "@@locale": "en_US",
+  "language":"en",
+  "title": "Projects",
+  "Duration": "Duration",
+  "typeactivity": "Project",
+  "typeactivity2": "Task",
+  "appbar_createActivity": "Creating a new Activity",
+  "nameactivity": "Name Activity",
+  "type": "Type",
+  "button_create": "Create Activity",
+  "commonInitialDateFormat": "Initial Date: {date}",
+  "commonFinalDateFormat": "Final Date: {date}",
+  "@commonInitialDateFormat": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "EEE, M/d/y, HH:mm:ss",
+        "isCustomDateFormat": "true"
+      }
+    }
+  },
+  "@commonFinalDateFormat": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "EEE, M/d/y, HH:mm:ss",
+        "isCustomDateFormat": "true"
+      }
+    }
+  }
+}

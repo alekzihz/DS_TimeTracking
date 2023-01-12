@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:practica_ds_timetracking/tree.dart' hide getTree;
 import 'package:practica_ds_timetracking/PageIntervals.dart';
 import 'package:practica_ds_timetracking/requests.dart';
@@ -8,8 +9,9 @@ import 'package:practica_ds_timetracking/PageNewActivity.dart';
 import 'package:practica_ds_timetracking/PageInfoActivity.dart';
 
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'generated/l10n.dart';
 
-import 'package:practica_ds_timetracking/searchByTag.dart';
 
 import 'dart:async';
 
@@ -25,23 +27,35 @@ class PageActivities extends StatefulWidget {
 }
 
 class _PageActivitiesState extends State<PageActivities> {
+
+
   late int  id;
   late Future<Tree> futureTree;
   late Timer  _timer;
   static const int  periodeRefresh = 2;
   List<Activity> lista_activity = [];
 
-  late String title="Proyectos Principales";
+  //late String title="Proyectos Principales";
 
   //button search
   late String value="" ;
 
+  //filtro
+  late bool band=false;
+  late int indexR;
+
+  //lenguaje
+  late Locale c;
+  late bool language=false;
+
+
   @override
   void initState() {
     super.initState();
+
     id = widget.id;
     futureTree = getTree(id);
-    //_activateTimer();
+    _activateTimer();
   }
 
   @override
@@ -54,11 +68,24 @@ class _PageActivitiesState extends State<PageActivities> {
         if (snapshot.hasData) {
           return Scaffold(
             appBar: snapshot.data!.root.name=="root"? AppBar(
-              title:Text(title),
+              title:Text(S.of(context).title),
               automaticallyImplyLeading: false,
               centerTitle: true,// updated 16-dec-2022
               actions: <Widget>[
                 IconButton(onPressed: (){
+                  if(language){
+                    setState(() {
+                      S.load(const Locale('en_US'));
+                      language=false;
+                    });
+
+                  }else{
+                    setState(() {
+                      S.load(const Locale('es_ES'));
+                      language=true;
+                    });
+
+                  }
                 },
                     icon: Icon(Icons.language)
                 ),
@@ -76,7 +103,20 @@ class _PageActivitiesState extends State<PageActivities> {
               title: Text(snapshot.data!.root.name), // updated 16-dec-2022
               actions: <Widget>[
                 IconButton(onPressed: (){
-                      },
+                  if(language){
+                    setState(() {
+                      S.load(const Locale('en_US'));
+                      language=false;
+                    });
+
+                  }else{
+                    setState(() {
+                      S.load(const Locale('es_ES'));
+                      //Intl.getCurrentLocale();
+                      language=true;
+                      });
+                    }
+                  },
                 icon: Icon(Icons.language)
                 ),
                 IconButton(icon: Icon(Icons.home),
@@ -100,12 +140,12 @@ class _PageActivitiesState extends State<PageActivities> {
                       ),
                       onChanged: (String val){
                         if(val!=""){
-                          title="Buscando...";
+                          //title="Buscando...";
                           futureTree=searchByTag(val);
                           value = val;
                           setState(() {});
                         }else{
-                          title="Proyectos Principales";
+                          //title="Proyectos Principales";
                           futureTree=getTree(0);
                           setState(() {});
                         }
@@ -114,19 +154,14 @@ class _PageActivitiesState extends State<PageActivities> {
                     Align(
                       alignment: Alignment.topRight,
                       child: IconButton(onPressed: (){
-
-                        //itemBuilder: (BuildContext context, int index)=>
-                            //_listOrdenada(snapshot.data!.root.children[index], index);
-
-                        //separatorBuilder: (BuildContext context, int index) =>
-                        //const Divider();
-                        //),
-
-                        //lista_activity.reversed;
-                        for (Activity i in lista_activity.reversed){
-                          print(i.name);
-
+                        //futureTree.
+                        if(band){
+                          band=false;
+                        }else{
+                          band=true;
                         }
+                        setState(() {
+                        });
                         //TODO funcion sort.
                       },
                           icon: Icon(Icons.filter_alt_outlined)),
@@ -136,12 +171,16 @@ class _PageActivitiesState extends State<PageActivities> {
                     ListView.separated(
                       // it's like ListView.builder() but better because it includes a separator between items
                       //itemCount:10,
-
                       padding: const EdgeInsets.all(16.0),
+
+                      reverse: band,
                       itemCount: snapshot.data!.root.children.length, // updated 16-dec-2022
                       itemBuilder: (BuildContext context, int index) =>
                       //activity, index
-                      _buildRow(snapshot.data!.root.children[index], index), // updated 16-dec-2022
+
+                     !band ?_buildRow(snapshot.data!.root.children[index], index)
+                     :_buildRow(snapshot.data!.root.children[index], index),
+
 
                       separatorBuilder: (BuildContext context, int index) =>
                       const Divider(),
@@ -152,17 +191,6 @@ class _PageActivitiesState extends State<PageActivities> {
 
                   ],
                 ),
-
-
-
-
-
-
-
-
-
-
-
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 Navigator.of(context)
@@ -203,7 +231,7 @@ class _PageActivitiesState extends State<PageActivities> {
     if (activity is Project) {
       return ListTile(
         title: Text('${activity.name}'),
-        subtitle: Text('Proyecto'),
+        subtitle: Text(S.of(context).typeactivity),
         trailing: Wrap(
           children: <Widget> [
             (activity as Project).active ? new Text('$strDuration',
@@ -218,7 +246,6 @@ class _PageActivitiesState extends State<PageActivities> {
         leading: IconButton(
           alignment: Alignment.center,
           icon: const Icon(Icons.info),
-          //trailing: "gola",
           onPressed: () {
             //_navigateDownProjectIntervals(activity.id);
             Navigator.of(context)
@@ -240,11 +267,11 @@ class _PageActivitiesState extends State<PageActivities> {
 
       return ListTile(
         title: Text('${activity.name}'),
-        subtitle: Text('Tarea'),
+        subtitle: Text(S.of(context).typeactivity2),
         trailing: Wrap(
           spacing: 50,
           children: <Widget>[
-            FloatingActionButton(
+            FloatingActionButton.small(
               onPressed: () {
                 // Envuelve la reproducción o pausa en una llamada a `setState`. Esto asegura
                 // que se muestra el icono correcto
@@ -254,34 +281,38 @@ class _PageActivitiesState extends State<PageActivities> {
                     stop(activity.id);
                     _refresh();
                   } else {
-
-
                     start(activity.id);
                     _refresh();
                   }
                 });
               },
-              // Muestra el icono correcto dependiendo del estado del vídeo.
+              // Muestra el icono correcto dependiendo del estado de la tarea
               child: Icon(
-                (activity as Task).active ? Icons.pause : Icons.play_arrow_outlined,
+                (activity as Task).active ? Icons.pause_circle_outline : Icons.play_arrow_outlined,
               ),
             ),
-
             //icon: activity.active ? new Icon(Icons.pause):new Icon(Icons.play_arrow),
             //cambia el color del texto duracion cuando la tarea esta activa
             (activity as Task).active ? new Text('$strDuration',
               style: TextStyle(color: Colors.green),
-
             ):
             new Text('$strDuration',
               style: TextStyle(color: Colors.black),
-
             ),
-
           ],
-
         ),
         onTap: () => _navigateDownIntervals(activity.id),
+        leading: IconButton(
+          alignment: Alignment.center,
+          icon: const Icon(Icons.info),
+          onPressed: () {
+            //_navigateDownProjectIntervals(activity.id);
+            Navigator.of(context)
+                .push(MaterialPageRoute<void>(
+              builder: (context) => PageInfoActivity(activity),
+            ));
+          },
+        ),
         onLongPress: () {
           if ((activity as Task).active) {
             stop(activity.id);
@@ -293,22 +324,17 @@ class _PageActivitiesState extends State<PageActivities> {
         }, // TODO start/stop counting the time for tis task
       );
     }
-
-
-
   }
-
   //construye el arbol de hijos del proyecto
   void _navigateDownActivities(int childId) {
     Navigator.of(context).push(MaterialPageRoute<void>(
       builder: (context) => PageActivities(childId),
     )).then((var value) {
-      //_activateTimer();
+      _activateTimer();
       _refresh();
 
     });
   }
-
   void _navigateDownIntervals(int childId) {
     Navigator.of(context)
         .push(MaterialPageRoute<void>(
@@ -318,70 +344,20 @@ class _PageActivitiesState extends State<PageActivities> {
       _refresh();
     });
   }
-
-
   void _refresh() async {
     futureTree = getTree(id); // to be used in build()
     setState(() {});
   }
 
-
   void _activateTimer() {
     _timer = Timer.periodic(Duration(seconds: periodeRefresh), (Timer t) {
-      futureTree = getTree(id);
+
+      if(value==""){
+        futureTree = getTree(id);
+      }
       setState(() {});
     });
   }
-
-  void startSearching() {
-    setState(() {
-    });
-  }
-
-  Widget getAppBarSearching(Function cancelSearch, Function searching,
-      TextEditingController searchController) {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      leading: IconButton(
-          icon: Icon(Icons.clear),
-          onPressed: () {
-            cancelSearch();
-          }),
-      title: Padding(
-        padding: const EdgeInsets.only(bottom: 10, right: 10),
-        child: TextField(
-          controller: searchController,
-          onEditingComplete: () {
-            searching();
-          },
-          style: new TextStyle(color: Colors.white),
-          cursorColor: Colors.white,
-          autofocus: true,
-          decoration: InputDecoration(
-            focusColor: Colors.white,
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white)),
-            enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white)),
-          ),
-        ),
-      ),
-    );
-  }
-
-  _listOrdenada(children, index) {
-
-
-
-
-
-
-
-  }
-
-
-
-
 
 
 

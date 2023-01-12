@@ -1,0 +1,4 @@
+#Fri Dec 23 19:14:09 CET 2022
+base.0=C\:\\Users\\dalex\\IdeaProjects\\TimeTracking\\DS_TimeTracking\\practica_ds_timetracking\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex

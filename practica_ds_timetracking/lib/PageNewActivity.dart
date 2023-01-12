@@ -3,9 +3,7 @@ import 'package:practica_ds_timetracking/page_activities.dart';
 import 'package:practica_ds_timetracking/tree.dart' as Tree hide getTree;
 import 'package:practica_ds_timetracking/requests.dart';
 
-
-
-List<String> list_activity = <String>['Proyecto','Tarea'];
+import 'generated/l10n.dart';
 
 
 class PageNewActivity extends StatefulWidget {
@@ -15,23 +13,43 @@ class PageNewActivity extends StatefulWidget {
 
   }
 
-
   @override
   State<PageNewActivity> createState() => _PageNewActivityState();
 }
 
 class _PageNewActivityState extends State<PageNewActivity> {
 
-  String firstElementContent = list_activity.first;
   late int idParent = widget.idParentActivity;
   late String nameActivity;
   String tag="none";
   int typeActivity=0;
+
+
+  //lenguage
+
+
   @override
   Widget build(BuildContext context) {
+    String name = S.of(context).appbar_createActivity.toString();
+    String firstElementContent;
+    List<String> list_activity = <String>
+      [S.of(context).typeactivity.toString(),
+      S.of(context).typeactivity2.toString()];
+
+    if(typeActivity==0){
+      firstElementContent = list_activity.first;
+    }else{
+      firstElementContent = list_activity.last;
+    }
+
+
+
+
+
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Creando Nueva Actividad'),
+        title: Text(S.of(context).appbar_createActivity),
       ),
       body: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,9 +58,10 @@ class _PageNewActivityState extends State<PageNewActivity> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: TextFormField(
-            decoration: const InputDecoration(
+
+            decoration: InputDecoration(
               border: UnderlineInputBorder(),
-              labelText: 'Nombre de la Actividad',
+              labelText: name,
 
             ),
             onChanged: (texto){
@@ -66,7 +85,7 @@ class _PageNewActivityState extends State<PageNewActivity> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: Text("Tipo"),
+              child: Text(S.of(context).type),
             ),
             Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
@@ -91,6 +110,7 @@ class _PageNewActivityState extends State<PageNewActivity> {
                         //task
 
                       }
+                      print(newValue);
                       firstElementContent = newValue!;
                     });
                   },)
@@ -117,7 +137,8 @@ class _PageNewActivityState extends State<PageNewActivity> {
 
                     //_showMyDialog();
                 },
-                child: const Text('Crear Actividad'),),
+                child: Text(S.of(context).button_create),
+              ),
 
             ),
 

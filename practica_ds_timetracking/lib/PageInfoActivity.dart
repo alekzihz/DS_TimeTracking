@@ -3,6 +3,8 @@ import 'package:practica_ds_timetracking/page_activities.dart';
 import 'package:practica_ds_timetracking/tree.dart' as Tree hide getTree;
 import 'package:practica_ds_timetracking/requests.dart';
 
+import 'generated/l10n.dart';
+
 
 class PageInfoActivity extends StatefulWidget {
   //const PageInfoActivity({Key? key}) : super(key: key);
@@ -37,6 +39,14 @@ class _PageInfoActivityState extends State<PageInfoActivity> {
     String strDuration = Duration(seconds: ac.duration).toString().split('.').first;
     String strInitialDate = ac.initialDate.toString().split('.')[0];
     String strFinalDate = ac.finalDate.toString().split('.')[0];
+
+    if(strFinalDate=="null"){
+      strFinalDate= '1974-03-20 00:00:00.000';
+    }
+    if(strInitialDate=="null"){
+      strInitialDate= '1974-03-20 00:00:00.000';
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(ac.name),
@@ -48,7 +58,7 @@ class _PageInfoActivityState extends State<PageInfoActivity> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                child: Text(ac.name),
+                child: Text(S.of(context).nameactivity +" "+ac.name.toUpperCase()),
               ),
             ],
           ),
@@ -56,24 +66,7 @@ class _PageInfoActivityState extends State<PageInfoActivity> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                child: Text(strDuration),
-              ),
-            ],
-          ),
-
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                child: Text(strInitialDate),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                child: Text(strFinalDate),
+                child: Text(S.of(context).Duration +" "+strDuration),
               ),
             ],
           ),
@@ -82,7 +75,24 @@ class _PageInfoActivityState extends State<PageInfoActivity> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                child: Text(ac.tag),
+                child: Text(S.of(context).commonInitialDateFormat(DateTime.parse(strInitialDate))),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                child: Text(S.of(context).commonFinalDateFormat(DateTime.parse(strFinalDate))),
+              ),
+            ],
+          ),
+
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                child: Text("Tag: "+ac.tag),
               ),
             ],
           ),

@@ -1,0 +1,149 @@
+@startuml
+
+'https://plantuml.com/class-diagram
+
+
+
+class main{
+  main(String[] args):void
+  -testTag():void
+  +apendiceA(): void
+  +apendiceB(): void
+  +readJson(): void
+  -creatingRootForJSON(JSONObject):void
+  -feedChildren(JSONObject, Component): Component
+  -feedInterval(JSONArray, Task): List<Interval>
+  +crearJson(): void
+  +writeTreeJson(Project): JSONObject
+  +writeChildrenRoot(Component): JSONObject
+  -writeIntervalTask(Interval): JSONObject
+}
+abstract Component{
+    {abstract}#initialDate: LocalDateTime
+    {abstract}#finalDate: LocalDateTime
+    {abstract}#tagName: String
+    {abstract}#duration: LocalDateTime
+    {abstract}#parentProject: Project
+    {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
+    {abstract}-acceptVisitor(v: Visitor): void
+}
+
+Interface Visitor{
+    +visitTask(task: Task): void
+    +visitProject(project: Project): void
+    +visitInterval( interval: Interval): void
+
+}
+
+class Project{
+    -childrenProject:List <component>: arrayList
+    -log: Logger
+    
+    -invariant(): boolean
+    +updateInitialDate(newFinalDate: LocalDateTime): void
+    {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
+    #addComponent(component: Component):void
+    #acceptVisitor(v: Visitor):void
+}
+
+class Task {
+    -intervalList:List <interval>
+    -log: Logger
+    
+    -invariant(): boolean
+    {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
+    {abstract}-acceptVisitor(v: Visitor): void
+    +addInterval(): void
+    +startTask(): void
+    +stopTask(): void
+}
+class interval{
+    -task: Task
+    -finalDate:LocalDateTime
+    -initialDate:LocalDateTime
+    -Duration:Duration
+    -clock: Clock
+    -log: Logger
+    
+    -invariant(): boolean
+    {abstract}-acceptVisitor(v: Visitor): void
+    {abstract}-update(ob: Observable, arg: Object): void
+    +stopInterval(): void
+
+}
+
+package java.util{
+
+    interface Observer {
+
+        +{abstract}update(arg0: Observable, arg1: Object)
+
+    }
+
+    Abstract Observable
+    {
+       +{abstract}addObserver(ob: Observer)
+       +{abstract}deleteObserver(ob: Observer)
+       +{abstract}notifyObserver(arg0: Observable, arg1:Object)
+    }
+
+
+
+}
+
+class Clock {
+    -instanceClock: Clock
+    -seconds: long
+    -timer: Timer
+    -log: Logger
+    -clock(seconds: int)
+    +getInstanceClock(seconds: int):static synchronized :Clock
+
+}
+
+class NotifyTask{
+    {abstract}run():void
+}
+
+class Printer{
+    -log: Logger
+
+    -invariant(): Boolean
+    +visitTask(task: Task): void
+    +visitProject(project: Project): void
+    +visitInterval( interval: Interval): void
+
+    +{abstract}update(arg0: Observable, arg1: Object)
+}
+
+
+class SearchTag {
+    -searchTag: String
+    -result: List<String>
+    -log: Logger
+    
+    
+    -invariant(): boolean
+
+}
+
+Clock-left->NotifyTask
+NotifyTask--|>Observable
+NotifyTask-left-|>TimerTask
+
+SearchTag..|>Visitor
+
+Printer..|>Visitor
+Printer..|>Observer
+
+main"1..n"--> Component
+Project *--> "*"Component:children
+
+Component <|--down(Project,Task)
+
+Clock--|> Observable
+interval ..|> Observer
+Observable*--left>"*"Observer:observers
+Task "1..n"*--> interval:interval
+
+@enduml
