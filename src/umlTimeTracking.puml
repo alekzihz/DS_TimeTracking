@@ -26,6 +26,7 @@ abstract Component{
     {abstract}#duration: LocalDateTime
     {abstract}#parentProject: Project
     {abstract}#id:int
+    {abstract}#formatter: DateTimeFormatter
     #{static}nextId:AtomicInteger
     -log: Logger
     {abstract}+findActivityById(id:int):Component
@@ -44,18 +45,21 @@ Interface Visitor{
 class Project{
     -childrenProject:List <component>: arrayList
     -log: Logger
-
+    -active:Boolean
     -invariant(): boolean
+
     +updateInitialDate(newFinalDate: LocalDateTime): void
-    {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
-    +addComponent(component: Component):void
+    +addComponent(component: Component):
+    +updateActiveProject()
     #acceptVisitor(v: Visitor):void
+    #toJson(depth:int):JSONObject
     {abstract}+findActivityById(id:int):Component
-     #toJson(depth:int):JSONObject
+    {abstract}-updateDurationAndFinalDate(newDuration: Duration, newTimer: Time, newFinalDate: LocalDateTime): void
+
 }
 
 class Task {
-    -intervalList:List <interval>
+    #intervalList:List <interval>
     -log: Logger
     -active:Boolean
     -invariant(): boolean
@@ -65,7 +69,8 @@ class Task {
     +startTask(): void
     +stopTask(): void
     {abstract}+findActivityById(id:int):Component
-    #toJson(depth:int):JSONObject
+    +toJson(depth:int):JSONObject
+
 }
 class interval{
     -task: Task
@@ -74,21 +79,24 @@ class interval{
     -Duration:Duration
     -clock: Clock
     -log: Logger
-
+    -active = Boolean
     -invariant(): boolean
     {abstract}-acceptVisitor(v: Visitor): void
     {abstract}-update(ob: Observable, arg: Object): void
     +stopInterval(): void
+    +toJson(depth:int):JSONObject
 
 }
 
 class Printer{
     -log: Logger
+    -Project tree;
+    -{static}dateFormatter: DateTimeFormatter
 
     -invariant(): Boolean
-    +visitTask(task: Task): void
-    +visitProject(project: Project): void
-    +visitInterval( interval: Interval): void
+    +{abstract}visitTask(task: Task): void
+    +{abstract}visitProject(project: Project): void
+    +{abstract}visitInterval( interval: Interval): void
 
     +{abstract}update(arg0: Observable, arg1: Object)
 }
@@ -96,11 +104,13 @@ class Printer{
 
 class SearchTag {
     -searchTag: String
-    -result: List<String>
+    -result: List<Component>
     -log: Logger
-
-
     -invariant(): boolean
+    +{abstract}visitTask(task: Task): void
+    +{abstract}visitProject(project: Project): void
+    +{abstract}visitInterval( interval: Interval): void
+
 
 }
 
@@ -122,11 +132,7 @@ package java.util{
 
 
 }
-class NotifyTask{
-    {abstract}run():void
-}
 
-class TimerTask{}
 
 class Clock {
     -instanceClock: Clock
@@ -146,7 +152,7 @@ Printer..|>Observer
 main"1..n"--> Component
 Project *--> "*"Component:children
 
-Component <|--down(Project,Task)
+(Project,Task)--down|>Component
 
 Clock--|> Observable
 interval ..|> Observer
@@ -157,9 +163,7 @@ Task "1..n"*--> interval:interval
 
 
 
-Clock-left->NotifyTask
-NotifyTask--|>Observable
-NotifyTask-left-|>TimerTask
+
 
 
 package webServer{
@@ -186,7 +190,7 @@ package webServer{
 
     }
 
-mainWebServer"1..1"-right-> WebServer
+mainWebServer".."-right-> WebServer
 socketThread<-up- WebServer
 socketThread--|>Thread
 
