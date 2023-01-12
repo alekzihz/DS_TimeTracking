@@ -12,8 +12,8 @@ import java.util.Observer;
  */
 public class Printer implements Visitor, Observer {
     //private static final DateTimeFormatter DATEFORMATTER;
-    private static final DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private final Logger log = LoggerFactory.getLogger("printer");
+    private static final DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    private final Logger log = LoggerFactory.getLogger("core/printer");
     private Project tree;
     public Printer(Project root) {
 
@@ -38,10 +38,10 @@ public class Printer implements Visitor, Observer {
     @Override
     public void visitProject(Project project) {
 
-            assert invariant();
-            String formatString = String.format("Project : %15s %30s %30s %20s", project.getTagName(),(project.getInitialDate()).format(DATEFORMATTER),(project.getDateFinal()).format(DATEFORMATTER),
-                    project.getDuration().toSeconds());
-            log.info(formatString);
+        assert invariant();
+        String formatString = String.format("Project : %15s %30s %30s %20s", project.getTagName(),(project.getInitialDate()).format(DATEFORMATTER),(project.getDateFinal()).format(DATEFORMATTER),
+            project.getDuration().toSeconds());
+        log.info(formatString);
         assert invariant();
 
     }
@@ -52,10 +52,10 @@ public class Printer implements Visitor, Observer {
     @Override
     public void visitTask(Task task) {
 
-            assert invariant();
-            String formatString = String.format("activity: %15s %30s %30s %20s", task.getTagName(),task.getInitialDate().format(DATEFORMATTER),task.getDateFinal().format(DATEFORMATTER),
-                    task.getDuration().toSeconds());
-            log.info(formatString);
+        assert invariant();
+        String formatString = String.format("activity: %15s %30s %30s %20s", task.getTagName(),task.getInitialDate().format(DATEFORMATTER),task.getDateFinal().format(DATEFORMATTER),
+            task.getDuration().toSeconds());
+        log.info(formatString);
         assert invariant();
     }
 
@@ -69,11 +69,8 @@ public class Printer implements Visitor, Observer {
         assert invariant();
 
         String formatString = String.format("Interval:   %44s %30s %20s", interval.getInitialDate().format(DATEFORMATTER),interval.getFinalDate().format(DATEFORMATTER),
-                interval.getDuration().toSeconds());
-
-
-
-       log.info(formatString);
+            interval.getDuration().toSeconds());
+        log.info(formatString);
         assert invariant();
 
     }
