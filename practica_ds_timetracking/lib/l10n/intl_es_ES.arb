@@ -1,0 +1,33 @@
+{
+  "@@locale": "es_ES",
+  "language":"es",
+  "title": "Proyectos Principales",
+  "typeactivity": "Proyecto",
+  "typeactivity2": "Tarea",
+  "Duration": "Duracion",
+  "appbar_createActivity" : "Creando una Actividad",
+  "nameactivity": "Nombre de la Actividad",
+  "type": "Tipo",
+  "button_create" : "Crear Actividad",
+  "commonInitialDateFormat": "Fecha Inicial: {date}",
+  "commonFinalDateFormat": "Fecha Final: {date}",
+  "@commonInitialDateFormat": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "d/M/y, HH:mm:ss",
+        "isCustomDateFormat": "true"
+      }
+    }
+  },
+  "@commonFinalDateFormat": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "d/M/y, HH:mm:ss",
+        "isCustomDateFormat": "true"
+      }
+    }
+  }
+
+}
