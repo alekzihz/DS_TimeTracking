@@ -108,19 +108,15 @@ public class Interval implements Observer {
         setActive(false);
     }
 
-
-
     public JSONObject toJson() {
-        final DateTimeFormatter formatter =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         JSONObject json = new JSONObject();
         json.put("class", "interval");
         //json.put("id", id);
         json.put("initialDate", initialDate==null
-            ? JSONObject.NULL : formatter.format(initialDate));
+            ? JSONObject.NULL : task.formatter.format(initialDate));
         json.put("finalDate", finalDate==null
-            ? JSONObject.NULL : formatter.format(finalDate));
+            ? JSONObject.NULL : task.formatter.format(finalDate));
         json.put("duration", duration.toSeconds());
         json.put("active", active);
         return json;
