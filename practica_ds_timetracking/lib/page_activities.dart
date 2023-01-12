@@ -95,7 +95,9 @@ class _PageActivitiesState extends State<PageActivities> {
                         print("pop");
                         Navigator.of(context).pop();
                       }
-                    } // TODO go home page = root
+                      //MaterialPageRoute(builder: (context) => PageActivities(0));
+                    }
+                  // TODO go home page = root
                 ),
                 //TODO other actions
               ],
@@ -143,12 +145,33 @@ class _PageActivitiesState extends State<PageActivities> {
                           //title="Buscando...";
                           futureTree=searchByTag(val);
                           value = val;
+
+                          //_refresh();
+                          //_activateTimer();
                           setState(() {});
+
                         }else{
-                          //title="Proyectos Principales";
+                          //title="Proy_ectos Principales";
+                          FocusScope.of(context).unfocus();
                           futureTree=getTree(0);
-                          setState(() {});
+                          //_activateTimer();
+                          //initState();
+
+                          Navigator.push(
+                            context,
+                            //it returns to updated tree.
+                            MaterialPageRoute(builder: (context) => PageActivities(0)),
+                          );
+                          //_refresh();
+
+
+
+
+
+                         //setState(() {});
                         }
+
+
                       },
                     ),
                     Align(
@@ -156,6 +179,8 @@ class _PageActivitiesState extends State<PageActivities> {
                       child: IconButton(onPressed: (){
                         //futureTree.
                         if(band){
+                          print(snapshot.data!.root.children.length);
+                          print(band);
                           band=false;
                         }else{
                           band=true;
@@ -171,15 +196,17 @@ class _PageActivitiesState extends State<PageActivities> {
                     ListView.separated(
                       // it's like ListView.builder() but better because it includes a separator between items
                       //itemCount:10,
+
                       padding: const EdgeInsets.all(16.0),
 
-                      reverse: band,
+
+                      //reverse: band,
                       itemCount: snapshot.data!.root.children.length, // updated 16-dec-2022
                       itemBuilder: (BuildContext context, int index) =>
                       //activity, index
 
                      !band ?_buildRow(snapshot.data!.root.children[index], index)
-                     :_buildRow(snapshot.data!.root.children[index], index),
+                     :_buildRow(snapshot.data!.root.children[snapshot.data!.root.children.length-1-index], index),
 
 
                       separatorBuilder: (BuildContext context, int index) =>
@@ -351,7 +378,6 @@ class _PageActivitiesState extends State<PageActivities> {
 
   void _activateTimer() {
     _timer = Timer.periodic(Duration(seconds: periodeRefresh), (Timer t) {
-
       if(value==""){
         futureTree = getTree(id);
       }

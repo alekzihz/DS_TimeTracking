@@ -96,7 +96,7 @@ class _PageIntervalsState extends State<PageIntervals> {
    DateTime initial= DateTime.parse(strInitialDate);
     DateTime finalD= DateTime.parse(strFinalDate);
 
-    print(finalD.toString());
+    //print(finalD.toString());
 
 
     //String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(interval.initialDate);
