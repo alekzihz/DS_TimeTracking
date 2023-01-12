@@ -142,8 +142,12 @@ class S {
 
   /// `Initial Date: {date}`
   String commonInitialDateFormat(DateTime date) {
-    final DateFormat dateDateFormat =
-        DateFormat('EEE, M/d/y, HH:mm:ss', Intl.getCurrentLocale());
+     DateFormat dateDateFormat;
+       dateDateFormat= DateFormat('EEE, M/d/y, HH:mm:ss', Intl.getCurrentLocale());
+
+    if(S.current.language=="es"){
+      dateDateFormat=DateFormat('d/M/y, HH:mm:ss', Intl.getCurrentLocale());
+    }
     final String dateString = dateDateFormat.format(date);
 
     return Intl.message(
@@ -156,8 +160,13 @@ class S {
 
   /// `Final Date: {date}`
   String commonFinalDateFormat(DateTime date) {
-    final DateFormat dateDateFormat =
+    DateFormat dateDateFormat =
         DateFormat('EEE, M/d/y, HH:mm:ss', Intl.getCurrentLocale());
+
+    if(S.current.language=="es"){
+      dateDateFormat=DateFormat('d/M/y, HH:mm:ss', Intl.getCurrentLocale());
+    }
+
     final String dateString = dateDateFormat.format(date);
 
     return Intl.message(
